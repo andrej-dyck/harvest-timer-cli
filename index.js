@@ -2,7 +2,7 @@
 
 import { $, path, which } from 'zx'
 import bash from './utils/git-bash.js'
-import prompt from "./utils/prompt.js";
+import prompt from './utils/prompt.js'
 
 await bash.init()
 console.log(await which('git'))

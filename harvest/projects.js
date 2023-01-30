@@ -1,6 +1,6 @@
 import lazy from '../utils/lazy.js'
-import api from './api.js'
 import pick from '../utils/pick.js'
+import api from './api.js'
 
 const projects = lazy(async () =>
     (await api.projects.mine()).map(({ project, task_assignments }) => ({

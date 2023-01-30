@@ -1,8 +1,11 @@
-import api from './api.js'
-import { chalk } from 'zx'
 import dayjs from 'dayjs'
+import { chalk } from 'zx'
+import once from '../utils/once.js'
+import api from './api.js'
 
-dayjs.extend(require('dayjs/plugin/duration'))
+once.initSync('dayjs-duration', () => {
+    dayjs.extend(require('dayjs/plugin/duration'))
+})
 
 const format = ({
     is_running,
@@ -19,13 +22,15 @@ const format = ({
 
 const icon = (isRunning) => isRunning === true ? '⏳' : '📑'
 
-const formatNotes = (notes) => chalk.green(`"${notes}"`)
+const formatNotes = (notes) =>
+    notes.length > 0 ? chalk.green(`"${notes}"`) : chalk.red('""')
 
 const formatTime = ({ started_time, ended_time }) => {
-    const pad0 = (time) => time.length === 4 ? "0" + time : time
+    const pad0 = (time) => time.length === 4 ? '0' + time : time
     return !!ended_time ? `${pad0(started_time)}-${pad0(ended_time)}` : `since ${pad0(started_time)}`
 }
 
+const formatDuration = ({ hours }) => dayjs.duration(hours, 'hours').format('HH:mm')
 
 const formatProject = ({
     project: { name: project_name },
@@ -73,6 +78,6 @@ export default {
         short: (entry) => formatAs1Line(entry),
         stopped: (entry) => formatStopped(entry),
         restarted: (entry) => formatRestarted(entry),
-        duration: ({ hours }) => dayjs.duration(hours, 'hours').format('HH:mm')
+        duration: ({ hours }) => formatDuration({ hours })
     }
 }

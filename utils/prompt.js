@@ -1,7 +1,10 @@
 import inquirer from 'inquirer'
 import searchListPrompt from 'inquirer-search-list'
+import once from './once.js'
 
-inquirer.registerPrompt('search-list', searchListPrompt)
+once.initSync('search-list-prompt', () => {
+    inquirer.registerPrompt('search-list', searchListPrompt)
+})
 
 export const namedChoices = (choices, nameOf) =>
     choices.map((c) => ({ name: nameOf(c), value: c }))

@@ -1,8 +1,14 @@
-import requiredEnv from '../utils/required-env.js'
-import lazy from '../utils/lazy.js'
-import got, { Options } from 'got'
-import cache from '../utils/cache.js'
 import dayjs from 'dayjs'
+import got, { Options } from 'got'
+
+import cache from '../utils/cache.js'
+import lazy from '../utils/lazy.js'
+import once from '../utils/once.js'
+import requiredEnv from '../utils/required-env.js'
+
+once.initSync('dayjs-is-today', () => {
+    dayjs.extend(require('dayjs/plugin/isToday'))
+})
 
 const apiOptions = lazy(async () => new Options({
     prefixUrl: 'https://api.harvestapp.com',
@@ -43,19 +49,15 @@ const time = {
     stop: ({ id }) =>
         harvest.patch(`v2/time_entries/${id}/stop`),
 
-    restart: ({
-        id,
-        spent_date,
-        user: { id: user_id },
-        project: { id: project_id },
-        task: { id: task_id },
-        notes
-    }) => {
+    startNow: (user_id, { project_id, task_id, notes }) => {
         const today = dayjs().format('YYYY-MM-DD')
-        return spent_date === today
+        return harvest.post('v2/time_entries', { user_id, project_id, task_id, spent_date: today, notes })
+    },
+
+    restart: ({ id, spent_date, user: { id: user_id }, project: { id: project_id }, task: { id: task_id }, notes }) =>
+        dayjs(spent_date).isToday()
             ? harvest.patch(`v2/time_entries/${id}/restart`)
-            : harvest.post('v2/time_entries', { user_id, project_id, task_id, spent_date: today, notes })
-    }
+            : time.startNow(user_id, { project_id, task_id, notes })
 
 }
 
