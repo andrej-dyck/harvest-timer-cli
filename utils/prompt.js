@@ -1,22 +1,15 @@
 import inquirer from 'inquirer'
-import inquirerPrompt from 'inquirer-autocomplete-prompt'
-import fuzzy from 'fuzzy'
+import searchListPrompt from 'inquirer-search-list'
 
-inquirer.registerPrompt('autocomplete', inquirerPrompt);
+inquirer.registerPrompt('search-list', searchListPrompt)
+
+export const namedChoices = (choices, nameOf) =>
+    choices.map((c) => ({ name: nameOf(c), value: c }))
 
 export default {
     question: {
         input: ({ name, message }) => ({ type: 'input', name, message }),
-        select: ({ name, message, choices }) => ({
-            type: 'autocomplete', name, message,
-            suggestOnly: false,
-            source: (_, input) => {
-                if (!input) return choices
-
-                const results = fuzzy.filter(input, choices)
-                return results.map((m) => m.original)
-            },
-        })
+        select: ({ name, message, choices }) => ({ type: 'search-list', name, message, choices, loop: false })
     },
-    with: async (questions) => await inquirer.prompt(questions)
+    ask: async (questions) => await inquirer.prompt(questions, {})
 }

@@ -11,7 +11,7 @@ const thisScript = path.basename(__filename)
 const scripts = (await $`ls *.js | grep -v ${thisScript}`)
     .stdout.trim().split('\n')
 
-const { script } = await prompt.with(
+const { script } = await prompt.ask(
     prompt.question.select({
         name: 'script',
         message: '🚀 execute script',
