@@ -2,6 +2,7 @@ import requiredEnv from '../utils/required-env.js'
 import lazy from '../utils/lazy.js'
 import got, { Options } from 'got'
 import cache from '../utils/cache.js'
+import dayjs from 'dayjs'
 
 const apiOptions = lazy(async () => new Options({
     prefixUrl: 'https://api.harvestapp.com',
@@ -19,7 +20,10 @@ const harvest = {
         ),
 
     patch: async (resource) =>
-        got(resource, { method: 'patch' }, await apiOptions.value()).json()
+        got(resource, { method: 'patch' }, await apiOptions.value()).json(),
+
+    post: async (resource, json) =>
+        got(resource, { method: 'post', json }, await apiOptions.value()).json()
 }
 
 const projects = {
@@ -39,8 +43,20 @@ const time = {
     stop: ({ id }) =>
         harvest.patch(`v2/time_entries/${id}/stop`),
 
-    restart: ({ id }) =>
-        harvest.patch(`v2/time_entries/${id}/restart`)
+    restart: ({
+        id,
+        spent_date,
+        user: { id: user_id },
+        project: { id: project_id },
+        task: { id: task_id },
+        notes
+    }) => {
+        const today = dayjs().format('YYYY-MM-DD')
+        return spent_date === today
+            ? harvest.patch(`v2/time_entries/${id}/restart`)
+            : harvest.post('v2/time_entries', { user_id, project_id, task_id, spent_date: today, notes })
+    }
+
 }
 
 const users = {

@@ -1,12 +1,14 @@
 #! /usr/bin/env node
 
+import { chalk } from 'zx'
+
 import bash from './utils/git-bash.js'
 import dotenv from './utils/dotenv.js'
-import prompt from './utils/prompt.js'
 
+import prompt from './utils/prompt.js'
 import api from './harvest/api.js'
+// import harvestProjects from './harvest/projects.js'
 import timeEntries from './harvest/time-entries.js'
-import { chalk } from 'zx'
 import actionStopTimer from './harvest/action-stop-timer.js'
 import actionRestartTimer from './harvest/action-restart-timer.js'
 
@@ -19,6 +21,8 @@ console.log(`👋 Hello, ${first_name} (${user_id})\n`)
 
 const latestEntry = await timeEntries.latest(user_id) ?? {}
 console.log(timeEntries.format.summary(latestEntry))
+
+
 
 /** Action? */
 const actions = latestEntry['is_running'] === true
@@ -39,20 +43,19 @@ if (action.startsWith('start')) {
 }
 /** Action: stop */
 else if (action.startsWith('stop')) {
-    await actionStopTimer.run(console.log, latestEntry)
+    await actionStopTimer.run({ entry: latestEntry })
 }
 /** Action: continue */
 else if (action.startsWith('continue')) {
-    await actionRestartTimer.run(console.log, user_id)
+    await actionRestartTimer.run({ user_id })
 }
 /* unknown action */
 else {
-    console.log(chalk.red('🤷‍♂️ unknown action'))
+    console.error(chalk.red('🤷‍♂️ unknown action'))
 }
 
 // // TODO EXPERIMENTING HERE
 // const projects = await harvestProjects.current()
-//
 // const { project } = await prompt.ask(
 //     prompt.question.select({
 //         name: 'project',

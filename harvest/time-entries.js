@@ -34,16 +34,20 @@ const formatAs1Line = ({
 
 const formatStopped = ({ notes, started_time, ended_time, hours }) =>
     !!ended_time
-        ? `${chalk.cyan('stopped')} ${formatNotes(notes)}: ${formatTime({ started_time, ended_time, hours })}`
+        ? `${chalk.bold('stopped')} ${formatNotes(notes)}: ${formatTime({ started_time, ended_time, hours })}`
         : chalk.red('🛑 failed to stop timer')
 
 const formatRestarted = ({ notes, started_time, is_running }) =>
     is_running
-        ? `${chalk.cyan('started')} ${formatNotes(notes)} at ${chalk.bold(started_time)}`
+        ? `${chalk.bold('started')} ${formatNotes(notes)} at ${started_time}`
         : chalk.red('🛑 failed to restart timer')
 
 export default {
     latest: (user_id) => api.time.latest(user_id),
+    ofDay: ({ user_id, day }) => {
+        const dayIsoString = day.format('YYYY-MM-DD')
+        return api.time.entries(user_id, { from: dayIsoString, to: dayIsoString })
+    },
 
     stop: (entry) => api.time.stop(entry),
     restart: (entry) => api.time.restart(entry),
