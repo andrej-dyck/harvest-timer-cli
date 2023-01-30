@@ -1,40 +1,53 @@
 import api from './api.js'
 import { chalk } from 'zx'
+import dayjs from 'dayjs'
+
+dayjs.extend(require('dayjs/plugin/duration'))
 
 const format = ({
     is_running,
     spent_date,
-    hours,
     notes,
     started_time,
     ended_time,
-    project: { name: project_name, code },
-    task: { name: task_name }
-}) => {
-    const project = `📃 ${project_name} [${code}]: ${task_name}`
-    const time = `⌚ ${formatTime({ started_time, ended_time, hours })}`
-    return `${icon(is_running)} ${chalk.bold(spent_date)} ${formatNotes(notes)}\n  ${project}\n  ${time}\n`
-}
+    project,
+    task
+}) =>
+    `${icon(is_running)} ${chalk.bold(spent_date)} ${formatNotes(notes)}\n` +
+    ` on ${formatProject({ project, task })}\n` +
+    ` ${formatTime({ started_time, ended_time })}`
 
-const icon = (isRunning) => isRunning === true ? '⏳' : '✅'
+const icon = (isRunning) => isRunning === true ? '⏳' : '📑'
 
 const formatNotes = (notes) => chalk.green(`"${notes}"`)
 
-const formatTime = ({ started_time, ended_time, hours }) =>
-    started_time + (!!ended_time ? ` - ${ended_time}` : ` (${hours}h)`)
+const formatTime = ({ started_time, ended_time }) => {
+    const pad0 = (time) => time.length === 4 ? "0" + time : time
+    return !!ended_time ? `${pad0(started_time)}-${pad0(ended_time)}` : `since ${pad0(started_time)}`
+}
+
+
+const formatProject = ({
+    project: { name: project_name },
+    task: { name: task_name }
+}) =>
+    `${project_name} (${task_name.split('(')[0].replace(/^\d+/, '').trim()})`
 
 const formatAs1Line = ({
+    is_running,
     notes,
     started_time,
     ended_time,
-    hours,
-    project: { name: project_name }
+    project,
+    task
 }) =>
-    `📃 ${formatNotes(notes)} (${formatTime({ started_time, ended_time, hours })}) on ${project_name}`
+    `${icon(is_running)} ${formatTime({ started_time, ended_time })}` +
+    ` ${formatNotes(notes)} on ${formatProject({ project, task })}`
 
 const formatStopped = ({ notes, started_time, ended_time, hours }) =>
     !!ended_time
-        ? `${chalk.bold('stopped')} ${formatNotes(notes)}: ${formatTime({ started_time, ended_time, hours })}`
+        ? `${chalk.bold('stopped')} ${formatNotes(notes)}:` +
+        ` ⌚ ${formatTime({ started_time, ended_time })} (${hours}h)`
         : chalk.red('🛑 failed to stop timer')
 
 const formatRestarted = ({ notes, started_time, is_running }) =>
@@ -43,7 +56,10 @@ const formatRestarted = ({ notes, started_time, is_running }) =>
         : chalk.red('🛑 failed to restart timer')
 
 export default {
-    latest: (user_id) => api.time.latest(user_id),
+    latest: ({ user_id, day }) => {
+        const dayIsoString = day.format('YYYY-MM-DD')
+        return api.time.latest(user_id, { from: dayIsoString, to: dayIsoString })
+    },
     ofDay: ({ user_id, day }) => {
         const dayIsoString = day.format('YYYY-MM-DD')
         return api.time.entries(user_id, { from: dayIsoString, to: dayIsoString })
@@ -56,6 +72,7 @@ export default {
         summary: (entry) => format(entry),
         short: (entry) => formatAs1Line(entry),
         stopped: (entry) => formatStopped(entry),
-        restarted: (entry) => formatRestarted(entry)
+        restarted: (entry) => formatRestarted(entry),
+        duration: ({ hours }) => dayjs.duration(hours, 'hours').format('HH:mm')
     }
 }
