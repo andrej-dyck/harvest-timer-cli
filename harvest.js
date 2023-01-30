@@ -16,23 +16,19 @@ import prompt from './utils/prompt.js'
 await bash.init()
 await dotenv.read()
 
+const today = dayjs().startOf('day')
+
 /** Welcome */
 const { id: user_id, first_name } = await api.users.me()
 console.log(
     `👋 Hello, ${first_name} (${user_id})\n`
 )
 
-const today = dayjs().startOf('day')
-const latestEntry = await timeEntries.latest({ user_id, day: today })
-console.log(
-    !!latestEntry ? timeEntries.format.summary(latestEntry) : chalk.green('🌄 A fresh day ...')
-)
-
 /** Action? */
 const chooseAction = ({ latestEntry }) => {
     const isRunning = latestEntry?.['is_running'] === true
 
-    const actions = ['🌟 start new', '🔁 continue with ...', '📅 show today']
+    const actions = ['🌟 start new', '🔁 continue with ...']
     if (isRunning) actions.push('🤚 stop running')
 
     return prompt.ask(
@@ -49,23 +45,23 @@ const runAction = async (action, { user_id, latestEntry, today }) => {
         'start': { $: () => console.error(chalk.red('TODO')) },
         'stop': { $: () => actionStopTimer.run({ entry: latestEntry }) },
         'continue': { $: () => actionRestartTimer.run({ user_id }) },
-        'show': { $: () => actionShowDay.run({ user_id, day: today }) }
     }[action] ?? {
         $: () => console.error(chalk.red('🤷‍♀️️ unknown action'))
     }
 
     await script.$()
-
-    return { done: action !== 'show' }
 }
 
-let exit = false
-while (!exit) {
+// noinspection InfiniteLoopJS - intendet; exit script with ctrl+c
+while (true) {
+    const { latest: latestEntry } = await actionShowDay.run({ user_id, day: today })
+
     console.log()
     await runAction(
         await chooseAction({ latestEntry }),
         { user_id, latestEntry, today }
-    ).then(({ done }) => done)
+    )
+    console.log()
 }
 
 // // TODO EXPERIMENTING HERE

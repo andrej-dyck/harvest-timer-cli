@@ -8,7 +8,7 @@ const chooseEntry = async ({ user_id, day }) => {
         .reverse()
 
     const choices = [
-        ...namedChoices(entries, (e) => timeEntries.format.short(e)),
+        ...namedChoices(entries, (e) => timeEntries.format.oneLine(e)),
         { name: '📅 another day ...', value: 'choose day' },
         { name: '❌ cancel', value: 'cancel' },
     ]

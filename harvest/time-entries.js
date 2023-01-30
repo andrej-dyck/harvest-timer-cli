@@ -7,18 +7,16 @@ once.initSync('dayjs-duration', () => {
     dayjs.extend(require('dayjs/plugin/duration'))
 })
 
-const format = ({
+const formatAs1Line = ({
     is_running,
-    spent_date,
     notes,
     started_time,
     ended_time,
     project,
     task
 }) =>
-    `${icon(is_running)} ${chalk.bold(spent_date)} ${formatNotes(notes)}\n` +
-    ` on ${formatProject({ project, task })}\n` +
-    ` ${formatTime({ started_time, ended_time })}`
+    `${icon(is_running)} ${formatTime({ started_time, ended_time })}` +
+    ` ${formatNotes(notes)} on ${formatProject({ project, task })}`
 
 const icon = (isRunning) => isRunning === true ? '⏳' : '📑'
 
@@ -38,17 +36,6 @@ const formatProject = ({
 }) =>
     `${project_name} (${task_name.split('(')[0].replace(/^\d+/, '').trim()})`
 
-const formatAs1Line = ({
-    is_running,
-    notes,
-    started_time,
-    ended_time,
-    project,
-    task
-}) =>
-    `${icon(is_running)} ${formatTime({ started_time, ended_time })}` +
-    ` ${formatNotes(notes)} on ${formatProject({ project, task })}`
-
 const formatStopped = ({ notes, started_time, ended_time, hours }) =>
     !!ended_time
         ? `${chalk.bold('stopped')} ${formatNotes(notes)}:` +
@@ -61,10 +48,6 @@ const formatRestarted = ({ notes, started_time, is_running }) =>
         : chalk.red('🛑 failed to restart timer')
 
 export default {
-    latest: ({ user_id, day }) => {
-        const dayIsoString = day.format('YYYY-MM-DD')
-        return api.time.latest(user_id, { from: dayIsoString, to: dayIsoString })
-    },
     ofDay: ({ user_id, day }) => {
         const dayIsoString = day.format('YYYY-MM-DD')
         return api.time.entries(user_id, { from: dayIsoString, to: dayIsoString })
@@ -74,8 +57,7 @@ export default {
     restart: (entry) => api.time.restart(entry),
 
     format: {
-        summary: (entry) => format(entry),
-        short: (entry) => formatAs1Line(entry),
+        oneLine: (entry) => formatAs1Line(entry),
         stopped: (entry) => formatStopped(entry),
         restarted: (entry) => formatRestarted(entry),
         duration: ({ hours }) => formatDuration({ hours })

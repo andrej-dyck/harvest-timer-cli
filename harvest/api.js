@@ -43,9 +43,6 @@ const time = {
         harvest.get('v2/time_entries', { ...params, user_id })
             .then(({ time_entries }) => time_entries),
 
-    latest: (user_id, params = {}) =>
-        time.entries(user_id, { ...params, per_page: 1 }).then((entries) => entries[0]),
-
     stop: ({ id }) =>
         harvest.patch(`v2/time_entries/${id}/stop`),
 
