@@ -7,13 +7,17 @@ import actionStartTimer from './harvest/action-start-timer.js'
 import actionStopTimer from './harvest/action-stop-timer.js'
 import api from './harvest/api.js'
 
+import clearConsole from './utils/clear-console.js'
 import prompt from './utils/prompt.js'
 
-const promptLoop = async ({ user_id }) => {
+const promptLoop = async ({ user_id, user_name }) => {
     const today = dayjs().startOf('day')
 
-    // noinspection InfiniteLoopJS - intendet; exit script with ctrl+c
+    // noinspection InfiniteLoopJS - intended; exit script with ctrl+c
     while (true) {
+        clearConsole()
+
+        console.log(`👋 Hello, ${user_name} (${user_id})\n`)
         const { latest: latestEntry } = await actionShowDay.run({ user_id, day: today })
 
         console.log()
@@ -21,7 +25,6 @@ const promptLoop = async ({ user_id }) => {
             await chooseAction({ latestEntry }),
             { user_id, latestEntry }
         )
-        console.log()
     }
 }
 
@@ -42,23 +45,22 @@ const chooseAction = ({ latestEntry }) => {
 
 const runAction = async (action, { user_id, latestEntry }) => {
     const script = {
-        'start': { $: () => actionStartTimer.run() },
-        'stop': { $: () => actionStopTimer.run({ entry: latestEntry }) },
-        'continue': { $: () => actionRestartTimer.run({ user_id, noEntryToday: !latestEntry }) },
+        'start': { run: () => actionStartTimer.run() },
+        'stop': { run: () => actionStopTimer.run({ entry: latestEntry }) },
+        'continue': { run: () => actionRestartTimer.run({ user_id, noEntryToday: !latestEntry }) },
     }[action] ?? {
-        $: () => console.error(chalk.red('🤷‍♀️️ unknown action'))
+        run: () => console.error(chalk.red('🤷‍♀️️ unknown action'))
     }
 
-    await script.$()
+    await script.run()
 }
 
 export default {
     run: async () => {
         /** Welcome */
         const { id: user_id, first_name } = await api.users.me()
-        console.log(`👋 Hello, ${first_name} (${user_id})\n`)
 
         /* Main Loop */
-        await promptLoop({ user_id })
+        await promptLoop({ user_id, user_name: first_name })
     }
 }
