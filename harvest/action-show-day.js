@@ -10,7 +10,7 @@ once.initSync('dayjs-is-today', () => {
 
 const showEntries = (entries) =>
     withBreaks(
-        highlightOverlaps(entries)
+        withConflicts(entries)
     ).forEach(
         (e) => console.log(
             '• ' + (typeof e === 'string' ? e : formatting.timeEntry.oneLiner(e))
@@ -25,11 +25,13 @@ const withBreaks = (entries) =>
         )
     ]
 
-const highlightOverlaps = (entries) =>
+const withConflicts = (entries) =>
     entries.length < 2 ? entries : [
         entries[0],
-        ...endStartDiffs(entries).map(
-            ({ e2, diff }) => diff <= -1 ? { ...e2, started_time: chalk.red(e2.started_time) } : e2
+        ...endStartDiffs(entries).flatMap(
+            ({ e2, diff }) => diff <= -1
+                ? [chalk.red('❗   👇 < 👆 time conflict'), { ...e2, started_time: chalk.red(e2.started_time) }]
+                : [e2]
         )
     ]
 

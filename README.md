@@ -15,7 +15,7 @@ npx zx index.js
 
 ## 🎨 Features
 
-- ✅ shows today's entries (with breaks, overlaps, and missing notes)
+- ✅ shows today's entries (with breaks, conflicts, and missing notes)
 - ✅ restart timer (choose an entry from today or 5 previous workdays)
 - ✅ stop running timer
 - 💡 _TODO_ start timer
