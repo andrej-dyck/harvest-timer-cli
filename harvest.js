@@ -40,11 +40,11 @@ const chooseAction = ({ latestEntry }) => {
     ).then(({ action }) => action.split(' ')[1])
 }
 
-const runAction = async (action, { user_id, latestEntry, today }) => {
+const runAction = async (action, { user_id, latestEntry }) => {
     const script = {
         'start': { $: () => console.error(chalk.red('TODO')) },
         'stop': { $: () => actionStopTimer.run({ entry: latestEntry }) },
-        'continue': { $: () => actionRestartTimer.run({ user_id }) },
+        'continue': { $: () => actionRestartTimer.run({ user_id, noEntryToday: !latestEntry }) },
     }[action] ?? {
         $: () => console.error(chalk.red('🤷‍♀️️ unknown action'))
     }
@@ -59,7 +59,7 @@ while (true) {
     console.log()
     await runAction(
         await chooseAction({ latestEntry }),
-        { user_id, latestEntry, today }
+        { user_id, latestEntry }
     )
     console.log()
 }

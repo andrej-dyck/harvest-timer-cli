@@ -2,6 +2,14 @@ import dayjs from 'dayjs'
 import prompt, { namedChoices } from '../utils/prompt.js'
 import timeEntries from './time-entries.js'
 
+const restartEntry = async ({ user_id, day }) => {
+    const entry = await chooseEntry({ user_id, day })
+    if (!entry) return
+
+    const restarted = await timeEntries.restart(entry)
+    console.log(timeEntries.format.restarted(restarted))
+}
+
 const chooseEntry = async ({ user_id, day }) => {
     const entries = (await timeEntries.ofDay({ user_id, day }))
         .filter(({ is_running }) => is_running === false)
@@ -16,39 +24,43 @@ const chooseEntry = async ({ user_id, day }) => {
     const { entry } = await prompt.ask(
         prompt.question.select({
             name: 'entry',
-            message: `Which entry of ${day.format('ddd, YYYY-MM-DD')}?`,
+            message: `Which entry of ${day.format('ddd, DD.MM.YYYY')}?`,
             choices: choices
         })
     )
 
     if (entry === 'cancel') return undefined
-    if (entry === 'choose day') return chooseEntry({ user_id, day: await chooseDay() })
+    if (entry === 'choose day') return chooseEntry({ user_id, day: await chooseDay({ current: day }) })
     return entry
 }
 
-const chooseDay = async () => {
+const chooseDay = async ({ current }) => {
     const today = dayjs().startOf('day')
-    const isWorkday = (d) => d.day() > 0 && d.day() < 6
 
     const days = [0, 1, 2, 3, 4, 5, 6, 7]
         .map((d) => today.subtract(d, 'day'))
-        .filter(isWorkday)
+        .filter((d) => isWorkday(d) && !d.isSame(current, 'day'))
 
     return prompt.ask(
         prompt.question.select({
             name: 'day',
             message: 'Which day?',
-            choices: namedChoices(days, (d) => d.format('ddd, YYYY-MM-DD'))
+            choices: namedChoices(days, (d) => d.format('ddd, DD.MM.YYYY'))
         })
     ).then(({ day }) => day)
 }
 
-export default {
-    run: async ({ user_id }) => {
-        const entry = await chooseEntry({ user_id, day: dayjs().startOf('day') })
-        if (!entry) return
+const isWorkday = (date) => date.day() > 0 && date.day() < 6
+const previousWorkday = (date) => {
+    const previous = date.subtract(1, 'day')
+    return isWorkday(previous) ? previous : previousWorkday(previous)
+}
 
-        const restarted = await timeEntries.restart(entry)
-        console.log(timeEntries.format.restarted(restarted))
+export default {
+    run: async ({ user_id, noEntryToday }) => {
+        const today = dayjs().startOf('day')
+        const day = noEntryToday === true ? previousWorkday(today) : today
+
+        await restartEntry({ user_id, day })
     }
 }
