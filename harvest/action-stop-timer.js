@@ -1,8 +1,9 @@
+import formatting from './formatting.js'
 import timeEntries from './time-entries.js'
 
 const stop = async (entry) => {
     const stopped = await timeEntries.stop(entry)
-    console.log(timeEntries.format.stopped(stopped))
+    console.log(formatting.timeEntry.stopped(stopped))
 }
 
 export default {

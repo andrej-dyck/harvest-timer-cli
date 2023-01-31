@@ -1,5 +1,6 @@
 import dayjs from 'dayjs'
 import prompt, { namedChoices } from '../utils/prompt.js'
+import formatting from './formatting.js'
 import timeEntries from './time-entries.js'
 
 const restartEntry = async ({ user_id, day }) => {
@@ -7,16 +8,15 @@ const restartEntry = async ({ user_id, day }) => {
     if (!entry) return
 
     const restarted = await timeEntries.restart(entry)
-    console.log(timeEntries.format.restarted(restarted))
+    console.log(formatting.timeEntry.restarted(restarted))
 }
 
 const chooseEntry = async ({ user_id, day }) => {
     const entries = (await timeEntries.ofDay({ user_id, day }))
         .filter(({ is_running }) => is_running === false)
-        .reverse()
 
     const choices = [
-        ...namedChoices(entries, (e) => timeEntries.format.oneLine(e)),
+        ...namedChoices(entries, (e) => formatting.timeEntry.oneLiner(e)),
         { name: '📅 another day ...', value: 'choose day' },
         { name: '❌ cancel', value: 'cancel' },
     ]

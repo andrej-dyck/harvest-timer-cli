@@ -1,6 +1,7 @@
 import dayjs from 'dayjs'
 import { chalk } from 'zx'
 import once from '../utils/once.js'
+import formatting from './formatting.js'
 import timeEntries from './time-entries.js'
 
 once.initSync('dayjs-is-today', () => {
@@ -12,7 +13,7 @@ const showEntries = (entries) =>
         highlightOverlaps(entries)
     ).forEach(
         (e) => console.log(
-            '• ' + (typeof e === 'string' ? e : timeEntries.format.oneLine(e))
+            '• ' + (typeof e === 'string' ? e : formatting.timeEntry.oneLiner(e))
         )
     )
 
@@ -35,8 +36,8 @@ const highlightOverlaps = (entries) =>
 const endStartDiffs = (entries) =>
     windowed(entries, 2).map(
         ([e1, e2]) => {
-            const e1End = dayjs(e1.spent_date + 'T' + e1.ended_time)
-            const e2Start = dayjs(e2.spent_date + 'T' + e2.started_time)
+            const e1End = timeEntries.endedTime(e1)
+            const e2Start = timeEntries.startedTime(e2)
 
             return { e1, e2, diff: e2Start.diff(e1End, 'minute') }
         }
@@ -49,14 +50,14 @@ const windowed = (array, size) => Array.from(
 
 const showTotal = (entries) => {
     const hours = entries.reduce((total, { hours }) => total + hours, 0)
-    console.log(`⌚ Total hours: ${chalk.bold(timeEntries.format.duration({ hours }))}`)
+    console.log(`⌚ Total hours: ${chalk.bold(formatting.duration({ hours }))}`)
 }
 
 export default {
     run: async ({ user_id, day }) => {
         console.log(chalk.bold(day.format('ddd, DD.MM.YYYY')))
 
-        const entries = (await timeEntries.ofDay({ user_id, day })).reverse()
+        const entries = await timeEntries.ofDay({ user_id, day })
 
         if (entries.length === 0) {
             console.log(chalk.green(day.isToday() ? '🌄 A fresh day ...' : `🍻 Nothing for ${day}`))
