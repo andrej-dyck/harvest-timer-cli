@@ -11,7 +11,7 @@ const read = (api, resource) => {
 const save = async (api, resource, response) => {
     const file = cacheFile(api, resource)
     await fs.ensureFile(file)
-    // noinspection ES6MissingAwait - on purpose
+    // noinspection ES6MissingAwait - intendet; writing cache shouldn't block interaction
     fs.writeJSON(file, response, 'utf8')
     return response
 }

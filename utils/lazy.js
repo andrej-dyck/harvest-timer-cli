@@ -1,4 +1,4 @@
-const lazy = (init) => {
+export default function (init) {
     let value
     return {
         value: async () => {
@@ -9,5 +9,3 @@ const lazy = (init) => {
         }
     }
 }
-
-export default lazy

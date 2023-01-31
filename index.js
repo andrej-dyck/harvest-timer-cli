@@ -1,22 +1,7 @@
 #! /usr/bin/env node
 
-import { $, path, which } from 'zx'
-import bash from './utils/git-bash.js'
-import prompt from './utils/prompt.js'
+import harvestCli from './harvest-cli.js'
+import bash from './utils/bash.js'
 
-await bash.init()
-console.log(await which('git'))
-
-const thisScript = path.basename(__filename)
-const scripts = (await $`ls *.js | grep -v ${thisScript}`)
-    .stdout.trim().split('\n')
-
-const { script } = await prompt.ask(
-    prompt.question.select({
-        name: 'script',
-        message: '🚀 execute script',
-        choices: scripts
-    })
-
-)
-await $`zx ${script}`.pipe(process.stdout)
+await bash.init({ useGitBash: true })
+await harvestCli.run()

@@ -1,30 +1,28 @@
-#! /usr/bin/env node
-
 import dayjs from 'dayjs'
 import { chalk } from 'zx'
-
 import actionRestartTimer from './harvest/action-restart-timer.js'
 import actionShowDay from './harvest/action-show-day.js'
+import actionStartTimer from './harvest/action-start-timer.js'
 import actionStopTimer from './harvest/action-stop-timer.js'
 import api from './harvest/api.js'
-import timeEntries from './harvest/time-entries.js'
-
-import dotenv from './utils/dotenv.js'
-import bash from './utils/git-bash.js'
 import prompt from './utils/prompt.js'
 
-await bash.init()
-await dotenv.read()
+const promptLoop = async ({ user_id }) => {
+    const today = dayjs().startOf('day')
 
-const today = dayjs().startOf('day')
+    // noinspection InfiniteLoopJS - intendet; exit script with ctrl+c
+    while (true) {
+        const { latest: latestEntry } = await actionShowDay.run({ user_id, day: today })
 
-/** Welcome */
-const { id: user_id, first_name } = await api.users.me()
-console.log(
-    `👋 Hello, ${first_name} (${user_id})\n`
-)
+        console.log()
+        await runAction(
+            await chooseAction({ latestEntry }),
+            { user_id, latestEntry }
+        )
+        console.log()
+    }
+}
 
-/** Action? */
 const chooseAction = ({ latestEntry }) => {
     const isRunning = latestEntry?.['is_running'] === true
 
@@ -42,7 +40,7 @@ const chooseAction = ({ latestEntry }) => {
 
 const runAction = async (action, { user_id, latestEntry }) => {
     const script = {
-        'start': { $: () => console.error(chalk.red('TODO')) },
+        'start': { $: () => actionStartTimer.run() },
         'stop': { $: () => actionStopTimer.run({ entry: latestEntry }) },
         'continue': { $: () => actionRestartTimer.run({ user_id, noEntryToday: !latestEntry }) },
     }[action] ?? {
@@ -52,26 +50,13 @@ const runAction = async (action, { user_id, latestEntry }) => {
     await script.$()
 }
 
-// noinspection InfiniteLoopJS - intendet; exit script with ctrl+c
-while (true) {
-    const { latest: latestEntry } = await actionShowDay.run({ user_id, day: today })
+export default {
+    run: async () => {
+        /** Welcome */
+        const { id: user_id, first_name } = await api.users.me()
+        console.log(`👋 Hello, ${first_name} (${user_id})\n`)
 
-    console.log()
-    await runAction(
-        await chooseAction({ latestEntry }),
-        { user_id, latestEntry }
-    )
-    console.log()
+        /* Main Loop */
+        await promptLoop({ user_id })
+    }
 }
-
-// // TODO EXPERIMENTING HERE
-// const projects = await harvestProjects.current()
-// const { project } = await prompt.ask(
-//     prompt.question.select({
-//         name: 'project',
-//         message: 'project',
-//         choices: namedChoices(projects, ({ project }) => project.name)
-//     })
-// )
-//
-// console.log(project)

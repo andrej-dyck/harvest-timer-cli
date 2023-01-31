@@ -51,6 +51,7 @@ const chooseDay = async ({ current }) => {
 }
 
 const isWorkday = (date) => date.day() > 0 && date.day() < 6
+
 const previousWorkday = (date) => {
     const previous = date.subtract(1, 'day')
     return isWorkday(previous) ? previous : previousWorkday(previous)
