@@ -7,11 +7,11 @@ Start this script with
 npx zx index.js
 ```
 
-**Note**: exit the script with `ctrl+c` 
+**Note**: Exit the script with `ctrl+c` 
 
-**Note**: you can install `zx` globally with `npm i -g zx` and use `zx index.js`
+**Note**: You can install `zx` globally with `npm i -g zx` and start the script with `zx index.js`
 
-**Tip**: create an alias within your bash; e.g., `harvest=npx zx <path-to-script>/index.js`
+**Tip**: Create an alias within your bash; e.g., `harvest=npx zx <path-to-script>/index.js`
 
 ## 🎨 Features
 
@@ -19,9 +19,11 @@ npx zx index.js
 - ✅ restart timer (choose an entry from today or 5 previous workdays)
 - ✅ stop running timer
 - 💡 _TODO_ start timer
-- 💡 _TODO_ start timer with smart rules
-- 💡 _TODO_ edit entries
-- 💡 _TODO_ restart timer with edit
+- 💡 _TODO_ filter current projects via config
+- 💡 _TODO_ start timer with custom rules via config
+- 💡 _TODO_ edit entries (start-time, end-time, task, notes)
+- 💡 _TODO_ restart timer with edit (start-time, task, notes)
+- 💡 _TODO_ stop timer with edit (end-time)
 - 💡 _TODO_ fix overlaps
 - 💡 _TODO_ fix gaps (unwanted breaks)
 - 💡 _TODO_ delete entries
@@ -35,7 +37,7 @@ npx zx index.js
 
 ## 💾 Cached Requests
 
-Some _GET_-requests to Harvest, e.g., [user profile](https://help.getharvest.com/api-v2/users-api/users/users/#retrieve-the-currently-authenticated-user) and [assigned projects](https://help.getharvest.com/api-v2/users-api/users/project-assignments/#list-active-project-assignments), are cached in `.cache`.
+Some _GET_-requests to Harvest, e.g., [user profile](https://help.getharvest.com/api-v2/users-api/users/users/#retrieve-the-currently-authenticated-user) and [assigned projects](https://help.getharvest.com/api-v2/users-api/users/project-assignments/#list-active-project-assignments), are cached in `.cache`. Thus, if you are missing some recent projects, it's time to delete that cache.
 
 ## 📚 Used Libraries
 
