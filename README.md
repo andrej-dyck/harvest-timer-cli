@@ -1,13 +1,15 @@
 # ⌚ Harvest Time Tracking CLI
 
-This is a [zx](https://github.com/google/zx)-based cli tool to manage the personal [Harvest](https://harvestapp.com) timer using its [API v2](https://help.getharvest.com/api-v2/).
+This is a [zx](https://github.com/google/zx)-based cli tool to manage the
+personal [Harvest](https://harvestapp.com) timer using
+its [API v2](https://help.getharvest.com/api-v2/).
 
-Start this script with
+**Start** this script with
 ```
 npx zx index.js
 ```
 
-**Note**: Exit the script with `ctrl+c` 
+**Exit** the script with `ctrl+c`
 
 **Note**: You can install `zx` globally with `npm i -g zx` and start the script with `zx index.js`
 
@@ -30,14 +32,19 @@ npx zx index.js
 
 ## 💻 Prerequisite
 
-* **Node** version >= 16.0.0
-* `npm install` in this project
-* Harvest **[developer API token](https://help.getharvest.com/api-v2/authentication-api/authentication/authentication/)** which is set as `HARVEST_ACCOUNT_ID` and `HARVEST_API_TOKEN` environment variables 
-* This script is configured to the [Git-bash](https://gitforwindows.org/) (cf. `index.js`) to work on Windows without [WSL](https://learn.microsoft.com/en-us/windows/wsl/). To this end, it expects a `PATH_GIT` pointing to the Git root director.
+- **Node** version >= 16.0.0
+- Install project dependencies with `npm install`
+- Create a Harvest [**developer API token**](https://help.getharvest.com/api-v2/authentication-api/authentication/authentication/) 
+  - Set the environment variables `HARVEST_ACCOUNT_ID` and `HARVEST_API_TOKEN`;
+    e.g., in the `.env` file
 
 ## 💾 Cached Requests
 
-Some _GET_-requests to Harvest, e.g., [user profile](https://help.getharvest.com/api-v2/users-api/users/users/#retrieve-the-currently-authenticated-user) and [assigned projects](https://help.getharvest.com/api-v2/users-api/users/project-assignments/#list-active-project-assignments), are cached in `.cache`. Thus, if you are missing some recent projects, it's time to delete that cache.
+Some _GET_-requests to Harvest,
+e.g., [user profile](https://help.getharvest.com/api-v2/users-api/users/users/#retrieve-the-currently-authenticated-user)
+and [assigned projects](https://help.getharvest.com/api-v2/users-api/users/project-assignments/#list-active-project-assignments),
+are cached in `.cache`.
+Thus, if you are missing some recent projects, it's time to delete that cache.
 
 ## 📚 Used Libraries
 
