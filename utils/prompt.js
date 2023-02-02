@@ -1,10 +1,14 @@
 import inquirer from 'inquirer'
 import searchListPrompt from 'inquirer-search-list'
-import once from './once.js'
+import lazy from './lazy.js'
 
-once.initSync('search-list-prompt', () => {
+const inquirerPrompt = lazy(async () => {
     inquirer.registerPrompt('search-list', searchListPrompt)
+    return inquirer.prompt
 })
+
+// this lazy value should prevent registering event listeners again and again
+const prompt = async (questions) => (await inquirerPrompt.value())(questions)
 
 export const namedChoices = (choices, nameOf) =>
     choices.map((c) => ({ name: nameOf(c), value: c }))
@@ -20,5 +24,5 @@ export default {
     answers: {
         isCancel: (value) => value === 'cancel'
     },
-    ask: async (questions) => await inquirer.prompt(questions, {})
+    ask: (questions) => prompt(questions)
 }
