@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 import api from './api.js'
 
-const sortedByStartedTime = (entries) => entries.sort(
+const sortedByStartedTime = (entries) => entries.reverse().sort(
     (e1, e2) => startedTime(e1).diff(startedTime(e2))
 )
 

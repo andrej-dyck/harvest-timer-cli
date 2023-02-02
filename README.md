@@ -41,7 +41,6 @@ npx zx index.js
 ## 🐛 Known Issues
 
 - After starting the timer, when the main loop ask for the action, no keyboard input doesn't work; none but `Enter`
-- Order of entries is wrong, when two entries have the same start-time (hh:mm) (e.g., quick restart of an entry)
 
 ## 📚 Used Libraries
 
