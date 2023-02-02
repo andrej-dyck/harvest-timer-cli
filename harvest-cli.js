@@ -49,10 +49,14 @@ const runAction = async (action, { user_id, latestEntry }) => {
         'stop': { run: () => actionStopTimer.run({ entry: latestEntry }) },
         'continue': { run: () => actionRestartTimer.run({ user_id, noEntryToday: !latestEntry }) },
     }[action] ?? {
-        run: () => console.error(chalk.red('🤷‍♀️️ unknown action'))
+        run: async () => ({ output: chalk.red('🤷‍♀️️ unknown action') })
     }
 
-    await script.run()
+    const result = await script.run()
+    if (!!result?.output) {
+        console.log(`\n▶ ${result.output}`)
+        await sleep(1000)
+    }
 }
 
 export default {

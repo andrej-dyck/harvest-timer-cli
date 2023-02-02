@@ -14,5 +14,11 @@ export default {
         input: ({ name, message }) => ({ type: 'input', name, message }),
         select: ({ name, message, choices }) => ({ type: 'search-list', name, message, choices, loop: false })
     },
+    choices: {
+        cancel: { name: '❌ cancel', value: 'cancel' }
+    },
+    answers: {
+        isCancel: (value) => value === 'cancel'
+    },
     ask: async (questions) => await inquirer.prompt(questions, {})
 }

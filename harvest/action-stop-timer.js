@@ -3,7 +3,8 @@ import timeEntries from './time-entries.js'
 
 const stop = async (entry) => {
     const stopped = await timeEntries.stop(entry)
-    console.log(formatting.timeEntry.stopped(stopped))
+
+    return { output: formatting.timeEntry.stopped(stopped) }
 }
 
 export default {
@@ -13,6 +14,6 @@ export default {
             return
         }
 
-        await stop(entry)
+        return await stop(entry)
     }
 }

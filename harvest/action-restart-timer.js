@@ -8,7 +8,7 @@ const restartEntry = async ({ user_id, day }) => {
     if (!entry) return
 
     const restarted = await timeEntries.restart(entry)
-    console.log(formatting.timeEntry.restarted(restarted))
+    return { output: formatting.timeEntry.started(restarted) }
 }
 
 const chooseEntry = async ({ user_id, day }) => {
@@ -18,18 +18,18 @@ const chooseEntry = async ({ user_id, day }) => {
     const choices = [
         ...namedChoices(entries, (e) => formatting.timeEntry.oneLiner(e)),
         { name: '📅 another day ...', value: 'choose day' },
-        { name: '❌ cancel', value: 'cancel' },
+        prompt.choices.cancel,
     ]
 
     const { entry } = await prompt.ask(
         prompt.question.select({
             name: 'entry',
             message: `Which entry of ${day.format('ddd, DD.MM.YYYY')}?`,
-            choices: choices
+            choices
         })
     )
 
-    if (entry === 'cancel') return undefined
+    if (prompt.answers.isCancel(entry)) return undefined
     if (entry === 'choose day') return chooseEntry({ user_id, day: await chooseDay({ current: day }) })
     return entry
 }
@@ -62,6 +62,6 @@ export default {
         const today = dayjs().startOf('day')
         const day = noEntryToday === true ? previousWorkday(today) : today
 
-        await restartEntry({ user_id, day })
+        return await restartEntry({ user_id, day })
     }
 }

@@ -42,22 +42,21 @@ const time = {
     stop: ({ id }) =>
         harvest.patch(`v2/time_entries/${id}/stop`),
 
-    startNow: (user_id, { project_id, task_id, notes }) => {
+    startNow: ({ project_id, task_id, notes }) => {
         const today = dayjs().format('YYYY-MM-DD')
-        return harvest.post('v2/time_entries', { user_id, project_id, task_id, spent_date: today, notes })
+        return harvest.post('v2/time_entries', { project_id, task_id, spent_date: today, notes: notes.trim() })
     },
 
-    restart: ({ id, spent_date, user: { id: user_id }, project: { id: project_id }, task: { id: task_id }, notes }) =>
+    restart: ({ id, spent_date, project: { id: project_id }, task: { id: task_id }, notes }) =>
         dayjs(spent_date).isToday()
             ? harvest.patch(`v2/time_entries/${id}/restart`)
-            : time.startNow(user_id, { project_id, task_id, notes })
-
+            : time.startNow({ project_id, task_id, notes })
 }
-
-const me = lazy(() => harvest.get('v2/users/me'))
 
 const users = {
     me: () => me.value()
 }
+
+const me = lazy(() => harvest.get('v2/users/me'))
 
 export default { projects, time, users }

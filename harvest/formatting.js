@@ -35,22 +35,22 @@ const formatProject = ({
 }) =>
     `${project_name} (${task_name.split('(')[0].replace(/^\d+/, '').trim()})`
 
+const formatStarted = ({ notes, started_time, is_running, project: { name: project_name } }) =>
+    is_running
+        ? `${chalk.bold('started')} ${formatNotes(notes)} for ${project_name} at ${started_time}`
+        : chalk.red('🛑 failed to restart timer')
+
 const formatStopped = ({ notes, started_time, ended_time, hours }) =>
     !!ended_time
         ? `${chalk.bold('stopped')} ${formatNotes(notes)}:` +
         ` ⌚ ${formatTime({ started_time, ended_time })} (${hours}h)`
         : chalk.red('🛑 failed to stop timer')
 
-const formatRestarted = ({ notes, started_time, is_running }) =>
-    is_running
-        ? `${chalk.bold('started')} ${formatNotes(notes)} at ${started_time}`
-        : chalk.red('🛑 failed to restart timer')
-
 export default {
     timeEntry: {
         oneLiner: (entry) => formatAs1Line(entry),
+        started: (entry) => formatStarted(entry),
         stopped: (entry) => formatStopped(entry),
-        restarted: (entry) => formatRestarted(entry),
     },
     duration: ({ hours }) => formatDuration({ hours })
 }
