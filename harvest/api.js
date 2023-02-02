@@ -1,7 +1,6 @@
 import dayjs from 'dayjs'
 import got, { Options } from 'got'
 
-import cache from '../utils/cache.js'
 import lazy from '../utils/lazy.js'
 import once from '../utils/once.js'
 import requiredEnv from '../utils/required-env.js'
@@ -20,10 +19,7 @@ const apiOptions = lazy(async () => new Options({
 
 const harvest = {
     get: async (resource, searchParams = {}) =>
-        cache.valueOrCreate('harvest', resource,
-            async () => got(resource, { searchParams }, await apiOptions.value()).json(),
-            ['v2/time_entries']
-        ),
+        got(resource, { searchParams }, await apiOptions.value()).json(),
 
     patch: async (resource) =>
         got(resource, { method: 'patch' }, await apiOptions.value()).json(),
@@ -58,8 +54,10 @@ const time = {
 
 }
 
+const me = lazy(() => harvest.get('v2/users/me'))
+
 const users = {
-    me: async () => await harvest.get(`v2/users/me`)
+    me: () => me.value()
 }
 
 export default { projects, time, users }

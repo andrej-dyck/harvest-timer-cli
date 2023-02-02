@@ -38,14 +38,6 @@ npx zx index.js
   - Set the environment variables `HARVEST_ACCOUNT_ID` and `HARVEST_API_TOKEN`;
     e.g., in the `.env` file
 
-## 💾 Cached Requests
-
-Some _GET_-requests to Harvest,
-e.g., [user profile](https://help.getharvest.com/api-v2/users-api/users/users/#retrieve-the-currently-authenticated-user)
-and [assigned projects](https://help.getharvest.com/api-v2/users-api/users/project-assignments/#list-active-project-assignments),
-are cached in `.cache`.
-Thus, if you are missing some recent projects, it's time to delete that cache.
-
 ## 📚 Used Libraries
 
 * [zx](https://github.com/google/zx) (Apache-2.0 license)
