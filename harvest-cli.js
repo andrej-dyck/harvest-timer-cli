@@ -17,7 +17,7 @@ const promptLoop = async ({ user_id, user_name }) => {
     while (true) {
         clearConsole()
 
-        console.log(`👋 Hello, ${user_name} (${user_id})\n`)
+        console.log(`👋 Hello, ${user_name}\n`)
         const { latest: latestEntry } = await actionShowDay.run({ user_id, day: today })
 
         console.log()

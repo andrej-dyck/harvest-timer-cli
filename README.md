@@ -4,16 +4,14 @@ This is a [zx](https://github.com/google/zx)-based cli tool to manage the
 personal [Harvest](https://harvestapp.com) timer using
 its [API v2](https://help.getharvest.com/api-v2/).
 
-**Start** this script with
+**Start** this script with (cf. prerequisites):
 ```
 npx zx index.js
 ```
 
-**Exit** the script with `ctrl+c`
+**Exit** the script with `ctrl+c`.
 
-**Note**: You can install `zx` globally with `npm i -g zx` and start the script with `zx index.js`
-
-**Tip**: Create an alias within your bash; e.g., `harvest=npx zx <path-to-script>/index.js`
+**Tip**: Create an alias within your bash; e.g., `harvest=npx zx <path-to-script>/index.js`.
 
 ## 🎨 Features
 
@@ -29,8 +27,9 @@ npx zx index.js
 - 💡 _TODO_ fix overlaps
 - 💡 _TODO_ fix gaps (unwanted breaks)
 - 💡 _TODO_ delete entries
+- 💡 _TODO_ bundle to binary (e.g., with [pgk](https://github.com/vercel/pkg)?)
 
-## 💻 Prerequisite
+## 💻 Prerequisites
 
 - **Node** version >= 16.0.0
 - Install project dependencies with `npm install`
@@ -40,7 +39,7 @@ npx zx index.js
 
 ## 🐛 Known Issues
 
-- After starting the timer, when the main loop ask for the action, no keyboard input doesn't work; none but `Enter`
+- After starting the timer, when the main loop ask for the action, no keyboard input works (only `Enter`).
 
 ## 📚 Used Libraries
 
