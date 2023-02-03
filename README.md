@@ -20,6 +20,7 @@ npx zx index.js
 - ✅ restart timer (choose an entry from preceding workdays)
 - ✅ stop running timer
 - ✅ start timer (for a project task with notes)
+- 💡 _TODO_ autocomplete for list prompts
 - 💡 _TODO_ filter current projects via config
 - 💡 _TODO_ start timer with custom rules via config
 - 💡 _TODO_ edit entries (start-time, end-time, task, notes)
@@ -40,7 +41,7 @@ npx zx index.js
 
 ## 🐛 Known Issues
 
-- List prompts with autocomplete don't take keyboard input (only `Enter` works) after non-list prompts like notes-input or confirm.
+- Unknown unknowns 🤷‍♂️
 
 ## 📚 Used Libraries
 
@@ -48,4 +49,3 @@ npx zx index.js
 * [dayjs](https://github.com/iamkun/dayjs/) (MIT license)
 * [got](https://github.com/sindresorhus/got) (MIT license)
 * [inquirer](https://github.com/SBoudrias/Inquirer.js) (MIT license)
-* [inquirer-search-list](https://github.com/robin-rpr/inquirer-search-list) (MIT license)

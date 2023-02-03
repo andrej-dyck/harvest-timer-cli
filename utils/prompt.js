@@ -1,9 +1,7 @@
 import inquirer from 'inquirer'
-import searchListPrompt from 'inquirer-search-list'
 import lazy from './lazy.js'
 
 const inquirerPrompt = lazy(async () => {
-    inquirer.registerPrompt('search-list', searchListPrompt)
     return inquirer.prompt
 })
 
@@ -18,7 +16,7 @@ export default {
         input: ({ name, message }) =>
             ({ type: 'input', name, message }),
         select: ({ name, message, choices }) =>
-            ({ type: 'search-list', name, message, choices, loop: false }),
+            ({ type: 'list', name, message, choices, loop: false }),
         confirm: ({ name, message, defaultAnswer = true }) =>
             ({ type: 'confirm', name, message, default: defaultAnswer }),
     },
