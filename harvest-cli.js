@@ -1,4 +1,3 @@
-import dayjs from 'dayjs'
 import { chalk } from 'zx'
 
 import actionRestartTimer from './harvest/action-restart-timer.js'
@@ -6,19 +5,18 @@ import actionShowDay from './harvest/action-show-day.js'
 import actionStartTimer from './harvest/action-start-timer.js'
 import actionStopTimer from './harvest/action-stop-timer.js'
 import api from './harvest/api.js'
+import calendar from './utils/calendar.js'
 
 import clearConsole from './utils/clear-console.js'
 import prompt from './utils/prompt.js'
 
 const promptLoop = async ({ user_id, user_name }) => {
-    const today = dayjs().startOf('day')
-
     // noinspection InfiniteLoopJS - intended; exit script with ctrl+c
     while (true) {
         clearConsole()
 
         console.log(`👋 Hello, ${user_name}\n`)
-        const { latest: latestEntry } = await actionShowDay.run({ user_id, day: today })
+        const { latest: latestEntry } = await actionShowDay.showDay({ user_id, day: calendar.today() })
 
         console.log()
         await runAction(
@@ -31,7 +29,7 @@ const promptLoop = async ({ user_id, user_name }) => {
 const chooseAction = ({ latestEntry }) => {
     const isRunning = latestEntry?.['is_running'] === true
 
-    const actions = ['🌟 start new', '🔁 continue with ...']
+    const actions = ['🌟 start new', '🔁 continue with ...', '📅 show day']
     if (isRunning) actions.push('🤚 stop running')
 
     return prompt.ask(
@@ -48,6 +46,7 @@ const runAction = async (action, { user_id, latestEntry }) => {
         'start': { run: () => actionStartTimer.run() },
         'stop': { run: () => actionStopTimer.run({ entry: latestEntry }) },
         'continue': { run: () => actionRestartTimer.run({ user_id, noEntryToday: !latestEntry }) },
+        'show': { run: () => actionShowDay.run({ user_id }) },
     }[action] ?? {
         run: async () => ({ output: chalk.red('🤷‍♀️️ unknown action') })
     }

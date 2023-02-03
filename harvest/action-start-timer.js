@@ -29,7 +29,7 @@ const chooseProject = async () => {
             choices
         })
     )
-    return prompt.answers.isCancel(project) ? undefined : project
+    return prompt.answers.takeIfNotCanceled(project)
 }
 
 const chooseTask = async ({ tasks }) => {
@@ -44,7 +44,7 @@ const chooseTask = async ({ tasks }) => {
             choices
         })
     )
-    return prompt.answers.isCancel(task) ? undefined : task
+    return prompt.answers.takeIfNotCanceled(task)
 }
 
 const inputNotes = async () =>
@@ -56,5 +56,5 @@ const inputNotes = async () =>
     ).then(({ notes }) => notes.trim())
 
 export default {
-    run: () => startTimer()
+    run: startTimer
 }

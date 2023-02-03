@@ -1,5 +1,7 @@
-import dayjs from 'dayjs'
+import calendar from '../utils/calendar.js'
 import prompt, { namedChoices } from '../utils/prompt.js'
+import workdays from '../utils/workdays.js'
+import actionChooseDay from './action-choose-day.js'
 import formatting from './formatting.js'
 import timeEntries from './time-entries.js'
 
@@ -29,38 +31,15 @@ const chooseEntry = async ({ user_id, day }) => {
         })
     )
 
-    if (prompt.answers.isCancel(entry)) return undefined
-    if (entry === 'choose day') return chooseEntry({ user_id, day: await chooseDay({ current: day }) })
-    return entry
-}
-
-const chooseDay = async ({ current }) => {
-    const today = dayjs().startOf('day')
-
-    const days = [0, 1, 2, 3, 4, 5, 6, 7]
-        .map((d) => today.subtract(d, 'day'))
-        .filter((d) => isWorkday(d) && !d.isSame(current, 'day'))
-
-    return prompt.ask(
-        prompt.question.select({
-            name: 'day',
-            message: 'Which day?',
-            choices: namedChoices(days, (d) => d.format('ddd, DD.MM.YYYY'))
-        })
-    ).then(({ day }) => day)
-}
-
-const isWorkday = (date) => date.day() > 0 && date.day() < 6
-
-const previousWorkday = (date) => {
-    const previous = date.subtract(1, 'day')
-    return isWorkday(previous) ? previous : previousWorkday(previous)
+    return entry === 'choose day'
+        ? chooseEntry({ user_id, ...await actionChooseDay.run({ current: day }) })
+        : prompt.answers.takeIfNotCanceled(entry)
 }
 
 export default {
     run: async ({ user_id, noEntryToday }) => {
-        const today = dayjs().startOf('day')
-        const day = noEntryToday === true ? previousWorkday(today) : today
+        const today = calendar.today()
+        const day = noEntryToday === true ? workdays.precedingWorkday(today) : today
 
         return await restartEntry({ user_id, day })
     }

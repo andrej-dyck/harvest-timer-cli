@@ -16,7 +16,8 @@ npx zx index.js
 ## 🎨 Features
 
 - ✅ shows today's entries (with breaks, conflicts, and missing notes)
-- ✅ restart timer (choose an entry from today or 5 previous workdays)
+- ✅ show entries of preceding workdays (max. five workdays)
+- ✅ restart timer (choose an entry from preceding workdays)
 - ✅ stop running timer
 - ✅ start timer (for a project task with notes)
 - 💡 _TODO_ filter current projects via config
@@ -39,7 +40,7 @@ npx zx index.js
 
 ## 🐛 Known Issues
 
-- After starting the timer, when the main loop ask for the action, no keyboard input works (only `Enter`).
+- List prompts with autocomplete don't take keyboard input (only `Enter` works) after non-list prompts like notes-input or confirm.
 
 ## 📚 Used Libraries
 

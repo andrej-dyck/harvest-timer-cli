@@ -15,14 +15,18 @@ export const namedChoices = (choices, nameOf) =>
 
 export default {
     question: {
-        input: ({ name, message }) => ({ type: 'input', name, message }),
-        select: ({ name, message, choices }) => ({ type: 'search-list', name, message, choices, loop: false })
+        input: ({ name, message }) =>
+            ({ type: 'input', name, message }),
+        select: ({ name, message, choices }) =>
+            ({ type: 'search-list', name, message, choices, loop: false }),
+        confirm: ({ name, message, defaultAnswer = true }) =>
+            ({ type: 'confirm', name, message, default: defaultAnswer }),
     },
     choices: {
         cancel: { name: '❌ cancel', value: 'cancel' }
     },
     answers: {
-        isCancel: (value) => value === 'cancel'
+        takeIfNotCanceled: (value) => value === 'cancel' ? undefined : value
     },
     ask: (questions) => prompt(questions)
 }
