@@ -1,9 +1,10 @@
 import dayjs from 'dayjs'
 import { chalk } from 'zx'
-import calendar from '../utils/calendar.js'
+
 import once from '../utils/once.js'
 import prompt from '../utils/prompt.js'
-import actionChooseDay from './action-choose-day.js'
+
+import chooseDay from './choose-day.js'
 import formatting from './formatting.js'
 import timeEntries from './time-entries.js'
 
@@ -78,8 +79,7 @@ export default {
     run: async ({ user_id }) => {
         let exit
         while (!exit) {
-            const { day } = await actionChooseDay.run()
-            await showDay({ user_id, day })
+            await showDay({ user_id, day: await chooseDay() })
 
             console.log()
             exit = await prompt.ask(

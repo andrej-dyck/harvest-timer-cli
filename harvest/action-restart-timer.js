@@ -1,11 +1,9 @@
 import calendar from '../utils/calendar.js'
-import prompt, { namedChoices } from '../utils/prompt.js'
 import workdays from '../utils/workdays.js'
 
-import actionChooseDay from './action-choose-day.js'
 import api from './api.js'
+import chooseEntry from './choose-entry.js'
 import formatting from './formatting.js'
-import timeEntries from './time-entries.js'
 
 const restartEntry = async ({ user_id, day }) => {
     const entry = await chooseEntry({ user_id, day })
@@ -13,28 +11,6 @@ const restartEntry = async ({ user_id, day }) => {
 
     const restarted = await api.time.restart(entry)
     return { output: formatting.timeEntry.started(restarted) }
-}
-
-const chooseEntry = async ({ user_id, day }) => {
-    const entries = (await timeEntries.ofDay({ user_id, day }))
-        .filter(({ is_running }) => is_running === false)
-
-    const choices = [
-        ...namedChoices(entries, (e) => formatting.timeEntry.oneLiner(e)),
-        { name: '📅 another day ...', value: 'choose day' },
-        prompt.choices.cancel,
-    ]
-
-    const { entry } = await prompt.ask(
-        prompt.question.select({
-            name: 'entry',
-            message: `Which entry of ${day.format('ddd, DD.MM.YYYY')}?`,
-            choices
-        })
-    )
-
-    if (entry === 'choose day') return chooseEntry({ user_id, ...await actionChooseDay.run({ current: day }) })
-    return prompt.answers.takeIfNotCanceled(entry)
 }
 
 export default {
