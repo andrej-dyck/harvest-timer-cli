@@ -2,6 +2,7 @@ import prompt, { namedChoices } from '../utils/prompt.js'
 
 import api from './api.js'
 import formatting from './formatting.js'
+import inputTime from './input-time.js'
 import projects from './projects.js'
 
 const startTimer = async () => {
@@ -13,8 +14,9 @@ const startTimer = async () => {
 
     const notes = await inputNotes()
 
-    const started = await api.time.startNow({ project_id: project.id, task_id: task.id, notes })
+    const started_time = await inputTime.started()
 
+    const started = await api.time.startToday({ project_id: project.id, task_id: task.id, notes, started_time })
     return { output: formatting.timeEntry.started(started) }
 }
 

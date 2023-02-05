@@ -18,11 +18,10 @@ npx zx index.js
 
 - ✅ shows today's entries (with breaks, conflicts, and missing notes)
 - ✅ show entries of preceding workdays (max. five workdays)
-- ✅ start timer (for a project task with notes)
+- ✅ start timer (on a project task with notes and optional start time)
   - ✅ exclude irrelevant projects from prompts via config
 - ✅ restart timer (choose an entry from preceding workdays)
 - ✅ stop running timer
-- 💡 _TODO_ start timer with start-time edit
 - 💡 _TODO_ start timer with custom rules via config
 - 💡 _TODO_ edit entries (start-time, end-time, task, notes)
 - 💡 _TODO_ restart timer with edit (start-time, task, notes)
@@ -48,6 +47,7 @@ If a configuration file is missing, a default one will be created. The files are
 
 ## 🐛 Known Issues
 
+- Stop action isn't shown when a timer is running but its start time is before the start time of the latest entry. 
 - Unknown unknowns 🤷‍♂️
 
 ## 📚 Used Libraries

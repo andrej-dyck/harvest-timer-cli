@@ -21,8 +21,8 @@ export const namedChoices = (choices, nameOf) =>
 
 export default {
     question: {
-        input: ({ name, message }) =>
-            ({ type: 'input', name, message }),
+        input: ({ name, message, defaultValue = undefined, validate = undefined }) =>
+            ({ type: 'input', name, message, default: defaultValue, validate }),
         select: ({ name, message, choices }) =>
             ({ type: 'autocomplete', name, message, source: fuzzySearch(choices), pageSize: 10, loop: false }),
         confirm: ({ name, message, defaultAnswer = true }) =>

@@ -42,15 +42,21 @@ const time = {
     stop: ({ id }) =>
         harvest.patch(`v2/time_entries/${id}/stop`),
 
-    startNow: ({ project_id, task_id, notes }) => {
+    startToday: ({ project_id, task_id, notes, started_time = undefined }) => {
         const today = dayjs().format('YYYY-MM-DD')
-        return harvest.post('v2/time_entries', { project_id, task_id, spent_date: today, notes: notes.trim() })
+        return harvest.post('v2/time_entries', {
+            project_id,
+            task_id,
+            spent_date: today,
+            started_time,
+            notes: notes.trim()
+        })
     },
 
     restart: ({ id, spent_date, project: { id: project_id }, task: { id: task_id }, notes }) =>
         dayjs(spent_date).isToday()
             ? harvest.patch(`v2/time_entries/${id}/restart`)
-            : time.startNow({ project_id, task_id, notes })
+            : time.startToday({ project_id, task_id, notes })
 }
 
 const users = {
