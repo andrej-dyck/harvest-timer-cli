@@ -5,6 +5,7 @@ personal [Harvest](https://harvestapp.com) timer using
 its [API v2](https://help.getharvest.com/api-v2/).
 
 **Start** this script with (cf. prerequisites):
+
 ```
 npx zx index.js
 ```
@@ -20,7 +21,6 @@ npx zx index.js
 - ✅ restart timer (choose an entry from preceding workdays)
 - ✅ stop running timer
 - ✅ start timer (for a project task with notes)
-- 💡 _TODO_ autocomplete for list prompts
 - 💡 _TODO_ filter current projects via config
 - 💡 _TODO_ start timer with custom rules via config
 - 💡 _TODO_ edit entries (start-time, end-time, task, notes)
@@ -35,9 +35,10 @@ npx zx index.js
 
 - **Node** version >= 16.0.0
 - Install project dependencies with `npm install`
-- Create a Harvest [**developer API token**](https://help.getharvest.com/api-v2/authentication-api/authentication/authentication/) 
-  - Set the environment variables `HARVEST_ACCOUNT_ID` and `HARVEST_API_TOKEN`;
-    e.g., in the `.env` file
+- Create a Harvest [**developer API token
+  **](https://help.getharvest.com/api-v2/authentication-api/authentication/authentication/)
+    - Set the environment variables `HARVEST_ACCOUNT_ID` and `HARVEST_API_TOKEN`;
+      e.g., in the `.env` file
 
 ## 🐛 Known Issues
 
@@ -45,7 +46,10 @@ npx zx index.js
 
 ## 📚 Used Libraries
 
-* [zx](https://github.com/google/zx) (Apache-2.0 license)
 * [dayjs](https://github.com/iamkun/dayjs/) (MIT license)
+* [fuzzy](https://github.com/mattyork/fuzzy) (MIT license)
 * [got](https://github.com/sindresorhus/got) (MIT license)
 * [inquirer](https://github.com/SBoudrias/Inquirer.js) (MIT license)
+* [inquirer-autocomplete-prompt](https://github.com/mokkabonna/inquirer-autocomplete-prompt) (ISC
+  license)
+* [zx](https://github.com/google/zx) (Apache-2.0 license)
