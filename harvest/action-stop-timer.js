@@ -1,11 +1,5 @@
+import api from './api.js'
 import formatting from './formatting.js'
-import timeEntries from './time-entries.js'
-
-const stop = async (entry) => {
-    const stopped = await timeEntries.stop(entry)
-
-    return { output: formatting.timeEntry.stopped(stopped) }
-}
 
 export default {
     run: async ({ entry }) => {
@@ -14,6 +8,7 @@ export default {
             return
         }
 
-        return await stop(entry)
+        const stopped = await api.time.stop(entry)
+        return { output: formatting.timeEntry.stopped(stopped) }
     }
 }

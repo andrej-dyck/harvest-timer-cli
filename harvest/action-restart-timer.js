@@ -1,7 +1,9 @@
 import calendar from '../utils/calendar.js'
 import prompt, { namedChoices } from '../utils/prompt.js'
 import workdays from '../utils/workdays.js'
+
 import actionChooseDay from './action-choose-day.js'
+import api from './api.js'
 import formatting from './formatting.js'
 import timeEntries from './time-entries.js'
 
@@ -9,7 +11,7 @@ const restartEntry = async ({ user_id, day }) => {
     const entry = await chooseEntry({ user_id, day })
     if (!entry) return
 
-    const restarted = await timeEntries.restart(entry)
+    const restarted = await api.time.restart(entry)
     return { output: formatting.timeEntry.started(restarted) }
 }
 
@@ -31,9 +33,8 @@ const chooseEntry = async ({ user_id, day }) => {
         })
     )
 
-    return entry === 'choose day'
-        ? chooseEntry({ user_id, ...await actionChooseDay.run({ current: day }) })
-        : prompt.answers.takeIfNotCanceled(entry)
+    if (entry === 'choose day') return chooseEntry({ user_id, ...await actionChooseDay.run({ current: day }) })
+    return prompt.answers.takeIfNotCanceled(entry)
 }
 
 export default {

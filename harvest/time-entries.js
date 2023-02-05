@@ -19,9 +19,6 @@ export default {
             .then(sortedByStartedTime)
     },
 
-    stop: (entry) => api.time.stop(entry),
-    restart: (entry) => api.time.restart(entry),
-
     startedTime,
     endedTime
 }
