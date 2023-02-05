@@ -8,12 +8,12 @@ const ensureColon = (timeInput) => {
     return timeInput.includes(':') ? timeInput : insertColon(timeInput)
 }
 
-const inputTime = ({ message, defaultValue = undefined }) =>
+const inputTime = ({ message, defaultTime = undefined }) =>
     prompt.ask(
         prompt.question.input({
             name: 'time',
             message,
-            defaultValue: defaultValue ?? 'now',
+            defaultValue: defaultTime ?? 'now',
             validate: (input) => input === 'now' || matchesHoursMinutes(input)
         })
     ).then(
@@ -21,6 +21,6 @@ const inputTime = ({ message, defaultValue = undefined }) =>
     )
 
 export default {
-    started: ({ started_time = undefined } = {}) =>
-        inputTime({ message: 'Start time', defaultValue: started_time })
+    started: ({ defaultTime = undefined } = {}) =>
+        inputTime({ message: 'Start time', defaultTime })
 }

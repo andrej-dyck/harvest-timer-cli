@@ -4,12 +4,20 @@ import workdays from '../utils/workdays.js'
 import api from './api.js'
 import chooseEntry from './choose-entry.js'
 import formatting from './formatting.js'
+import inputTime from './input-time.js'
 
 const restartEntry = async ({ user_id, day }) => {
     const entry = await chooseEntry({ user_id, day })
     if (!entry) return
 
-    const restarted = await api.time.restart(entry)
+    const started_time = await inputTime.started()
+
+    const restarted = await api.time.startToday({
+        project_id: entry.project.id,
+        task_id: entry.task.id,
+        notes: entry.notes,
+        started_time
+    })
     return { output: formatting.timeEntry.started(restarted) }
 }
 

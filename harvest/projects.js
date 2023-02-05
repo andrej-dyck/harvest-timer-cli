@@ -26,5 +26,6 @@ const filterCurrent = (projectsConfig) => (projects) => {
 }
 
 export default {
-    current: () => currentProjects.value()
+    current: () => currentProjects.value(),
+    byId: async ({ id }) => (await projects.value()).find((p) => p.id === id)
 }

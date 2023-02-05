@@ -2,6 +2,7 @@ import prompt, { namedChoices } from '../utils/prompt.js'
 
 import api from './api.js'
 import formatting from './formatting.js'
+import inputNotes from './input-notes.js'
 import inputTime from './input-time.js'
 import projects from './projects.js'
 
@@ -49,14 +50,6 @@ const chooseTask = async ({ tasks }) => {
     )
     return prompt.answers.takeIfNotCanceled(task)
 }
-
-const inputNotes = async () =>
-    await prompt.ask(
-        prompt.question.input({
-            name: 'notes',
-            message: 'Notes'
-        })
-    ).then(({ notes }) => notes.trim())
 
 export default {
     run: startTimer

@@ -24,7 +24,6 @@ npx zx index.js
 - ✅ stop running timer
 - 💡 _TODO_ start timer with custom rules via config
 - 💡 _TODO_ edit entries (start-time, end-time, task, notes)
-- 💡 _TODO_ restart timer with edit (start-time, task, notes)
 - 💡 _TODO_ stop timer with edit (end-time)
 - 💡 _TODO_ fix overlaps
 - 💡 _TODO_ fix gaps (unwanted breaks)

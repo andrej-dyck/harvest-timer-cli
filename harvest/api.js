@@ -52,11 +52,6 @@ const time = {
             notes: notes.trim()
         })
     },
-
-    restart: ({ id, spent_date, project: { id: project_id }, task: { id: task_id }, notes }) =>
-        dayjs(spent_date).isToday()
-            ? harvest.patch(`v2/time_entries/${id}/restart`)
-            : time.startToday({ project_id, task_id, notes })
 }
 
 const users = {
