@@ -18,10 +18,11 @@ npx zx index.js
 
 - ✅ shows today's entries (with breaks, conflicts, and missing notes)
 - ✅ show entries of preceding workdays (max. five workdays)
+- ✅ start timer (for a project task with notes)
+  - ✅ exclude irrelevant projects from prompts via config
 - ✅ restart timer (choose an entry from preceding workdays)
 - ✅ stop running timer
-- ✅ start timer (for a project task with notes)
-- 💡 _TODO_ filter current projects via config
+- 💡 _TODO_ start timer with start-time edit
 - 💡 _TODO_ start timer with custom rules via config
 - 💡 _TODO_ edit entries (start-time, end-time, task, notes)
 - 💡 _TODO_ restart timer with edit (start-time, task, notes)
@@ -39,6 +40,11 @@ npx zx index.js
   **](https://help.getharvest.com/api-v2/authentication-api/authentication/authentication/)
     - Set the environment variables `HARVEST_ACCOUNT_ID` and `HARVEST_API_TOKEN`;
       e.g., in the `.env` file
+
+## ⚙ Config
+
+The configuration for the script is saved in .json-files under the `.config` directory. 
+If a configuration file is missing, a default one will be created. The files are read only once on startup.
 
 ## 🐛 Known Issues
 

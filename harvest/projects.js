@@ -1,5 +1,8 @@
+import config from '../config.js'
+
 import lazy from '../utils/lazy.js'
 import pick from '../utils/pick.js'
+
 import api from './api.js'
 
 const projects = lazy(async () =>
@@ -13,12 +16,15 @@ const projects = lazy(async () =>
 
 const byName = ({ name: n1 }, { name: n2 }) => n1 > n2 ? 1 : n1 < n2 ? -1 : 0
 
-const filterCurrent = (projects) => {
-    // const ignore = [/* TODO read from config */]
-    // return projects.filter(({ name }) => !ignore.find((n) => name.includes(n)))
-    return projects
+const currentProjects = lazy(async () =>
+    projects.value().then(filterCurrent(await config.readProjects()))
+)
+
+const filterCurrent = (projectsConfig) => (projects) => {
+    const ignored = new Set(projectsConfig?.ignored?.names ?? [])
+    return projects.filter(({ name }) => !ignored.has(name))
 }
 
 export default {
-    current: () => projects.value().then(filterCurrent)
+    current: () => currentProjects.value()
 }
