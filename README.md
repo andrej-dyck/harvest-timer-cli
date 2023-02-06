@@ -16,10 +16,11 @@ npx zx index.js
 
 ## 🎨 Features
 
-- ✅ shows today's entries (with breaks, conflicts, and missing notes)
+- ✅ shows today's entries (with _breaks_, _conflicts_, and _missing notes_)
 - ✅ show entries of preceding workdays (max. five workdays)
-- ✅ start timer (on a project task with notes and optional start time)
+- ✅ start timer (on a _project task_ with _notes_ and _start time_)
   - ✅ exclude irrelevant projects from prompts via config
+  - ✅ input relative start time; e.g., `-15m` for _15 minutes ago_
 - ✅ restart timer (choose an entry from preceding workdays)
 - ✅ stop running timer
 - 💡 _TODO_ start timer with custom rules via config

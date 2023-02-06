@@ -23,7 +23,7 @@ const formatNotes = (notes) =>
     notes.length > 0 ? chalk.green(`"${notes}"`) : chalk.red('""')
 
 const formatTime = ({ started_time, ended_time }) => {
-    const pad0 = (time) => time.length === 4 ? '0' + time : time
+    const pad0 = (time) => time.padStart(5, '0')
     return !!ended_time ? `${pad0(started_time)}-${pad0(ended_time)}` : `since ${pad0(started_time)}`
 }
 
