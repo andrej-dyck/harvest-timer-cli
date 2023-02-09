@@ -21,20 +21,17 @@ const convertToTime = (now, relativeTimeInput) => {
 }
 
 const inputTime = ({ message, defaultTime = undefined }) =>
-    prompt.ask(
-        prompt.question.input({
-            name: 'time',
-            message,
-            defaultInput: defaultTime ?? 'now',
-            validate: (input) =>
-                input === 'now' || matchesHoursMinutes(input) || matchesRelativeTime(input)
-                    ? true
-                    : 'must be either \'now\',\n' +
-                    'a time of day of form \'HH:mm\' (colon optional) e.g., 12:45 or 1245,\n' +
-                    'or relative time of form \'(-+)(1-99)m\' (only minutes supported); e.g. -15m'
-        })
-    ).then(
-        ({ time }) => time === 'now' ? undefined
+    prompt.input({
+        message,
+        defaultInput: defaultTime ?? 'now',
+        validate: (input) =>
+            input === 'now' || matchesHoursMinutes(input) || matchesRelativeTime(input)
+                ? true
+                : 'must be either \'now\',\n' +
+                'a time of day of form \'HH:mm\' (colon optional) e.g., 12:45 or 1245,\n' +
+                'or relative time of form \'(-+)(1-99)m\' (only minutes supported); e.g. -15m'
+    }).then(
+        (time) => time === 'now' ? undefined
             : /^[+\-]/.test(time) ? convertToTime(dayjs(), time)
                 : ensureColon(time).padStart(5, '0')
     )

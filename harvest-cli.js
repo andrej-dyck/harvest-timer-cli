@@ -32,13 +32,10 @@ const chooseAction = ({ latestEntry }) => {
     const actions = ['🌟 start new', '🔁 continue with ...', '📅 show day']
     if (isRunning) actions.push('🤚 stop running')
 
-    return prompt.ask(
-        prompt.question.select({
-            name: 'action',
-            message: '⌚ Harvest time tracking',
-            choices: actions
-        })
-    ).then(({ action }) => action.split(' ')[1])
+    return prompt.selection({
+        message: '⌚ Harvest time tracking',
+        choices: actions
+    }).then((action) => action.split(' ')[1])
 }
 
 const runAction = async (action, { user_id, latestEntry }) => {

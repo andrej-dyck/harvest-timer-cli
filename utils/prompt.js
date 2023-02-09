@@ -9,30 +9,27 @@ const inquirerPrompt = lazy(async () => {
     return inquirer.prompt
 })
 
-const prompt = async (questions) => (await inquirerPrompt.value())(questions)
+const prompt = async (question) =>
+    (await inquirerPrompt.value())({ ...question, name: 'answer' }).then(({ answer }) => answer)
 
 const fuzzySearch = (choices) => (_, input = '') =>
     fuzzy.filter(input, choices, {
         extract: (el) => typeof el === 'string' ? el : el.name
     }).map((el) => el.original)
 
-export const namedChoices = (choices, nameOf) =>
+const namedChoices = (choices, nameOf) =>
     choices.map((c) => ({ name: nameOf(c), value: c }))
 
 export default {
-    question: {
-        input: ({ name, message, defaultInput = undefined, validate = undefined }) =>
-            ({ type: 'input', name, message, default: defaultInput, validate }),
-        select: ({ name, message, choices }) =>
-            ({ type: 'autocomplete', name, message, source: fuzzySearch(choices), pageSize: 10, loop: false }),
-        confirm: ({ name, message, defaultAnswer = true }) =>
-            ({ type: 'confirm', name, message, default: defaultAnswer }),
-    },
+    input: ({ message, defaultInput = undefined, validate = undefined }) =>
+        prompt({ type: 'input', message, default: defaultInput, validate }).then((answer) => answer.trim()),
+    selection: ({ message, choices }) =>
+        prompt({ type: 'autocomplete', message, source: fuzzySearch(choices), pageSize: 10, loop: false }),
+    confirmation: ({ message, defaultAnswer = true }) =>
+        prompt({ type: 'confirm', message, default: defaultAnswer }),
     choices: {
-        cancel: { name: '❌ cancel', value: 'cancel' }
-    },
-    answers: {
+        named: namedChoices,
+        cancel: { name: '❌ cancel', value: 'cancel' },
         takeIfNotCanceled: (value) => value === 'cancel' ? undefined : value
     },
-    ask: (questions) => prompt(questions)
 }

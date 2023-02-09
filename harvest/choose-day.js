@@ -1,5 +1,5 @@
 import calendar from '../utils/calendar.js'
-import prompt, { namedChoices } from '../utils/prompt.js'
+import prompt from '../utils/prompt.js'
 import workdays from '../utils/workdays.js'
 
 const chooseDay = async ({ today = calendar.today(), current = today } = {}) => {
@@ -7,13 +7,10 @@ const chooseDay = async ({ today = calendar.today(), current = today } = {}) => 
         .map((d) => today.subtract(d, 'day'))
         .filter((d) => workdays.isWorkday(d) && !d.isSame(current, 'day'))
 
-    return prompt.ask(
-        prompt.question.select({
-            name: 'day',
-            message: 'Which day?',
-            choices: namedChoices(days, (d) => d.format('ddd, DD.MM.YYYY'))
-        })
-    ).then(({ day }) => day)
+    return prompt.selection({
+        message: 'Which day?',
+        choices: prompt.choices.named(days, (d) => d.format('ddd, DD.MM.YYYY'))
+    })
 }
 
 export default chooseDay

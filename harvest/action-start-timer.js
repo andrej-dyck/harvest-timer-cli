@@ -1,4 +1,4 @@
-import prompt, { namedChoices } from '../utils/prompt.js'
+import prompt from '../utils/prompt.js'
 
 import api from './api.js'
 import formatting from './formatting.js'
@@ -21,35 +21,27 @@ const startTimer = async () => {
     return { output: formatting.timeEntry.started(started) }
 }
 
-const chooseProject = async () => {
-    const choices = [
-        ...namedChoices(await projects.current(), ({ name }) => name),
-        prompt.choices.cancel
-    ]
-    const { project } = await prompt.ask(
-        prompt.question.select({
-            name: 'project',
-            message: 'What project?',
-            choices
-        })
+const chooseProject = async () =>
+    await prompt.selection({
+        message: 'What project?',
+        choices: [
+            ...prompt.choices.named(await projects.current(), ({ name }) => name),
+            prompt.choices.cancel
+        ]
+    }).then(
+        (p) => prompt.choices.takeIfNotCanceled(p)
     )
-    return prompt.answers.takeIfNotCanceled(project)
-}
 
-const chooseTask = async ({ tasks }) => {
-    const choices = [
-        ...namedChoices(tasks, ({ name }) => name),
-        prompt.choices.cancel
-    ]
-    const { task } = await prompt.ask(
-        prompt.question.select({
-            name: 'task',
-            message: 'What task of that project?',
-            choices
-        })
+const chooseTask = async ({ tasks }) =>
+    await prompt.selection({
+        message: 'What task of that project?',
+        choices: [
+            ...prompt.choices.named(tasks, ({ name }) => name),
+            prompt.choices.cancel
+        ]
+    }).then(
+        (t) => prompt.choices.takeIfNotCanceled(t)
     )
-    return prompt.answers.takeIfNotCanceled(task)
-}
 
 export default {
     run: startTimer

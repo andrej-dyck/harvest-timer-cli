@@ -82,9 +82,10 @@ export default {
             await showDay({ user_id, day: await chooseDay() })
 
             console.log()
-            exit = await prompt.ask(
-                prompt.question.confirm({ name: 'chooseDay', message: 'Another day?', defaultAnswer: false })
-            ).then(({ chooseDay }) => !chooseDay)
+            exit = await prompt.confirmation({
+                message: 'Another day?',
+                defaultAnswer: false
+            }).then((yes) => !yes)
         }
     },
     showDay
