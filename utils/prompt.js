@@ -2,6 +2,7 @@ import fuzzy from 'fuzzy'
 import inquirer from 'inquirer'
 import autocompletePrompt from 'inquirer-autocomplete-prompt'
 import lazy from './lazy.js'
+import promptInput from './prompt-input.js'
 
 // this lazy value should prevent registering event listeners again and again
 const inquirerPrompt = lazy(async () => {
@@ -22,7 +23,7 @@ const namedChoices = (choices, nameOf) =>
 
 export default {
     input: ({ message, defaultInput = undefined, validate = undefined }) =>
-        prompt({ type: 'input', message, default: defaultInput, validate }).then((answer) => answer.trim()),
+        promptInput({ message, default: defaultInput, validate }),
     selection: ({ message, choices }) =>
         prompt({ type: 'autocomplete', message, source: fuzzySearch(choices), pageSize: 10, loop: false }),
     confirmation: ({ message, defaultAnswer = true }) =>
