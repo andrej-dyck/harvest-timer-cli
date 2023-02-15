@@ -34,8 +34,10 @@ const formatDuration = ({ hours }) => dayjs.duration(hours, 'hours').format('HH:
 const formatProject = ({
     project: { name: project_name },
     task: { name: task_name }
-}) =>
-    `${project_name} (${task_name.split('(')[0].replace(/^\d+/, '').trim()})`
+}) => {
+    const task = task_name.split('(')[0].replace(/^\d+/, '').trim()
+    return `${chalk.bold(project_name)} (${chalk.grey(task)})`
+}
 
 const formatStarted = ({ notes, started_time, is_running, project: { name: project_name } }) =>
     is_running
