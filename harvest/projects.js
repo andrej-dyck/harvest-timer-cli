@@ -1,14 +1,14 @@
 import config from '../config.js'
 
 import lazy from '../utils/lazy.js'
-import pick from '../utils/pick.js'
+import object from '../utils/object.js'
 
 import api from './api.js'
 
 const projects = lazy(async () =>
     (await api.projects.mine()).map(
         ({ project, task_assignments }) => ({
-            ...pick(project, ['id', 'name', 'code']),
+            ...object.pick(project, ['id', 'name', 'code']),
             tasks: task_assignments.map(({ task }) => task).sort(byName)
         })
     ).sort(byName)

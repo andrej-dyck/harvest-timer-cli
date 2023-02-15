@@ -3,4 +3,6 @@ const pick = (object, keys) =>
         Object.entries(object).filter(([k, _]) => keys.includes(k))
     )
 
-export default pick
+const isEmpty = (object) => Object.keys(object).length === 0
+
+export default { pick, isEmpty }

@@ -17,10 +17,10 @@ const convertToTime = (now, relativeTimeInput) => {
     if (n === null) throw Error('expected relative time')
 
     // only supporting minutes right now
-    return now.add(Number(n), 'minutes').format('HH:mm')
+    return now.add(Number(n), 'minutes')
 }
 
-const inputTime = ({ message, defaultTime = undefined }) =>
+const inputTime = ({ message, defaultTime, now }) =>
     prompt.input({
         message,
         defaultInput: defaultTime ?? 'now',
@@ -31,12 +31,16 @@ const inputTime = ({ message, defaultTime = undefined }) =>
                 'a time of day of form \'HH:mm\' (colon optional) e.g., 12:45 or 1245,\n' +
                 'or relative time of form \'(-+)(1-99)m\' (only minutes supported); e.g. -15m'
     }).then(
-        (time) => time === 'now' ? undefined
+        (time) => time === 'now' ? now()
             : /^[+\-]/.test(time) ? convertToTime(dayjs(), time)
                 : ensureColon(time).padStart(5, '0')
+    ).then(
+        (time) => dayjs.isDayjs(time) ? time.format('HH:mm') : time
     )
 
 export default {
-    started: ({ defaultTime = undefined } = {}) =>
-        inputTime({ message: 'Start time', defaultTime })
+    started: ({ defaultTime = 'now', now = () => dayjs() } = {}) =>
+        inputTime({ message: 'Start time', defaultTime, now }),
+    ended: ({ defaultTime = 'now', now = () => dayjs() } = {}) =>
+        inputTime({ message: 'Ended time', defaultTime, now })
 }

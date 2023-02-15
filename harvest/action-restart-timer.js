@@ -10,7 +10,7 @@ const restartEntry = async ({ user_id, day }) => {
     const entry = await chooseEntry({ user_id, day })
     if (!entry) return
 
-    const started_time = await inputTime.started()
+    const started_time = await inputTime.started({ now: () => undefined })
 
     const restarted = await api.time.startToday({
         project_id: entry.project.id,

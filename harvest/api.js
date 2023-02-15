@@ -19,13 +19,16 @@ const apiOptions = lazy(async () => new Options({
 
 const harvest = {
     get: async (resource, searchParams = {}) =>
-        got(resource, { searchParams }, await apiOptions.value()).json(),
+        got(resource, { searchParams }, await apiOptions.value()).json()
+            .catch((err) => console.log(err, err.response.body)),
 
-    patch: async (resource) =>
-        got(resource, { method: 'patch' }, await apiOptions.value()).json(),
+    patch: async (resource, json) =>
+        got(resource, { method: 'patch', json }, await apiOptions.value()).json()
+            .catch((err) => console.log(err, err.response.body)),
 
     post: async (resource, json) =>
         got(resource, { method: 'post', json }, await apiOptions.value()).json()
+            .catch((err) => console.log(err, err.response.body)),
 }
 
 const projects = {
@@ -44,14 +47,11 @@ const time = {
 
     startToday: ({ project_id, task_id, notes, started_time = undefined }) => {
         const today = dayjs().format('YYYY-MM-DD')
-        return harvest.post('v2/time_entries', {
-            project_id,
-            task_id,
-            spent_date: today,
-            started_time,
-            notes: notes.trim()
-        })
+        return harvest.post('v2/time_entries', { project_id, task_id, spent_date: today, started_time, notes })
     },
+
+    updateEntry: ({ id }, { task_id, started_time, ended_time, notes }) =>
+        harvest.patch(`v2/time_entries/${id}`, { task_id, started_time, ended_time, notes })
 }
 
 const users = {

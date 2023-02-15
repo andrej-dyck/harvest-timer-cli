@@ -4,9 +4,9 @@ import chooseDay from './choose-day.js'
 import formatting from './formatting.js'
 import timeEntries from './time-entries.js'
 
-const chooseEntry = async ({ user_id, day }) => {
+const chooseEntry = async ({ user_id, day, filterRunning = true }) => {
     const entries = (await timeEntries.ofDay({ user_id, day }))
-        .filter(({ is_running }) => is_running === false)
+        .filter(({ is_running }) => !filterRunning || is_running === true)
 
     const entry = await prompt.selection({
         message: `Which entry of ${day.format('ddd, DD.MM.YYYY')}?`,

@@ -1,4 +1,5 @@
 import { chalk } from 'zx'
+import actionEditEntry from './harvest/action-edit-entry.js'
 
 import actionRestartTimer from './harvest/action-restart-timer.js'
 import actionShowDay from './harvest/action-show-day.js'
@@ -29,7 +30,7 @@ const promptLoop = async ({ user_id, user_name }) => {
 const chooseAction = ({ latestEntry }) => {
     const isRunning = latestEntry?.['is_running'] === true
 
-    const actions = ['🌟 start new', '🔁 continue with ...', '📅 show day']
+    const actions = ['🌟 start timer', '🔁 continue with ...', '📝 edit entry', '📅 show day']
     if (isRunning) actions.push('🤚 stop running')
 
     return prompt.selection({
@@ -43,6 +44,7 @@ const runAction = async (action, { user_id, latestEntry }) => {
         'start': { run: () => actionStartTimer.run() },
         'stop': { run: () => actionStopTimer.run({ entry: latestEntry }) },
         'continue': { run: () => actionRestartTimer.run({ user_id, noEntryToday: !latestEntry }) },
+        'edit': { run: () => actionEditEntry.run({ user_id, noEntryToday: !latestEntry }) },
         'show': { run: () => actionShowDay.run({ user_id }) },
     }[action] ?? {
         run: async () => ({ output: chalk.red('🤷‍♀️️ unknown action') })
@@ -51,7 +53,7 @@ const runAction = async (action, { user_id, latestEntry }) => {
     const result = await script.run()
     if (!!result?.output) {
         console.log(`\n▶ ${result.output}`)
-        await sleep(1000)
+        await sleep(1500)
     }
 }
 

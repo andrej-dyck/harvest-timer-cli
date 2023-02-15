@@ -23,7 +23,7 @@ const namedChoices = (choices, nameOf) =>
 
 export default {
     input: ({ message, defaultInput = undefined, validate = undefined }) =>
-        promptInput({ message, default: defaultInput, validate }),
+        promptInput({ message, default: defaultInput, validate }).then((a) => typeof a === 'string' ? a : `${a}`),
     selection: ({ message, choices }) =>
         prompt({ type: 'autocomplete', message, source: fuzzySearch(choices), pageSize: 10, loop: false }),
     continue: ({ message = 'press Enter to continue...' } = {}) =>

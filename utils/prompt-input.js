@@ -26,7 +26,7 @@ export default createPrompt((config, done) => {
                 done(answer.trim())
             } else {
                 // TODO: Can we keep the value after validation failure?
-                // `rl.line = value` works but it looses the cursor position.
+                // `rl.line = value` works, but it looses the cursor position.
                 setValue('')
                 setError(isValid || 'You must provide a valid value')
                 setStatus('pending')
