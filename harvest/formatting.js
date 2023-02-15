@@ -8,16 +8,18 @@ once.initSync('dayjs-duration', () => {
 
 const formatAs1Line = ({
     is_running,
+    is_locked,
     notes,
     started_time,
     ended_time,
     project,
     task
 }) =>
-    `${icon(is_running)} ${formatTime({ started_time, ended_time })}` +
+    `${icon(is_running, is_locked)} ${formatTime({ started_time, ended_time })}` +
     ` ${formatNotes(notes)} on ${formatProject({ project, task })}`
 
-const icon = (isRunning) => isRunning === true ? '⏳' : '📑'
+const icon = (isRunning, is_locked) =>
+    is_locked ? '🔒' : isRunning === true ? '⏳' : '📑'
 
 const formatNotes = (notes) =>
     notes.length > 0 ? chalk.green(`"${notes}"`) : chalk.red('""')
