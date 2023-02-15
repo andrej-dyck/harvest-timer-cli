@@ -77,16 +77,10 @@ const showTotal = (entries) => {
 
 export default {
     run: async ({ user_id }) => {
-        let exit
-        while (!exit) {
-            await showDay({ user_id, day: await chooseDay() })
+        await showDay({ user_id, day: await chooseDay() })
 
-            console.log()
-            exit = await prompt.confirmation({
-                message: 'Another day?',
-                defaultAnswer: false
-            }).then((yes) => !yes)
-        }
+        console.log()
+        await prompt.continue()
     },
     showDay
 }

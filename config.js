@@ -1,10 +1,10 @@
 import { path, fs } from 'zx'
 import lazy from './utils/lazy.js'
 
-const projectsConfig = lazy(async () =>
-    await readConfig('projects.json', {
+const projectsConfig = lazy(() =>
+    readConfig('projects.json', {
         ignored: {
-            __comment: "A set of (exact) project names that will be excluded in prompts",
+            __description: "A set of (exact) project names that will be excluded from prompts",
             names: []
         }
     })
