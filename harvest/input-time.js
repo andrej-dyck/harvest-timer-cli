@@ -27,9 +27,7 @@ const inputTime = ({ message, defaultTime, now }) =>
         validate: (input) =>
             input === 'now' || matchesHoursMinutes(input) || matchesRelativeTime(input)
                 ? true
-                : 'must be either \'now\',\n' +
-                'a time of day of form \'HH:mm\' (colon optional) e.g., 12:45 or 1245,\n' +
-                'or relative time of form \'(-+)(1-99)m\' (only minutes supported); e.g. -15m'
+                : invalidTimeInputMessage
     }).then(
         (time) => time === 'now' ? now()
             : /^[+\-]/.test(time) ? convertToTime(dayjs(), time)
@@ -37,6 +35,11 @@ const inputTime = ({ message, defaultTime, now }) =>
     ).then(
         (time) => dayjs.isDayjs(time) ? time.format('HH:mm') : time
     )
+
+const invalidTimeInputMessage = 'must be either ' +
+    '\'now\',\n' +
+    'a time of day of form \'HH:mm\' or \'HHmm\'; e.g., 12:45 or 1245,\n' +
+    'or relative time of form \'(-+)(1-99)m\' (in minutes); e.g. -15m'
 
 export default {
     started: ({ defaultTime = 'now', now = () => dayjs() } = {}) =>

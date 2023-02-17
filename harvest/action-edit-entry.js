@@ -17,7 +17,7 @@ const editEntry = async ({ user_id, day }) => {
     const edits = await promptForEdits(entry)
     if (object.isEmpty(edits)) return
 
-    const updated = await api.time.updateEntry(entry, edits)
+    const updated = await api.time.editEntry(entry, edits)
     return { output: formatting.timeEntry.oneLiner(updated) }
 }
 

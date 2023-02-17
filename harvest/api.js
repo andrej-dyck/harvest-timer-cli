@@ -50,7 +50,7 @@ const time = {
         return harvest.post('v2/time_entries', { project_id, task_id, spent_date: today, started_time, notes })
     },
 
-    updateEntry: ({ id }, { task_id, started_time, ended_time, notes }) =>
+    editEntry: ({ id }, { task_id, started_time, ended_time, notes }) =>
         harvest.patch(`v2/time_entries/${id}`, { task_id, started_time, ended_time, notes })
 }
 

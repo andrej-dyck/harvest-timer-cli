@@ -1,5 +1,6 @@
 import api from './api.js'
 import formatting from './formatting.js'
+import inputTime from './input-time.js'
 
 export default {
     run: async ({ entry }) => {
@@ -8,7 +9,11 @@ export default {
             return
         }
 
-        const stopped = await api.time.stop(entry)
+        const ended_time = await inputTime.ended({ now: () => undefined })
+
+        const stopped = !ended_time
+            ? await api.time.stop(entry)
+            : await api.time.editEntry(entry, { ended_time })
         return { output: formatting.timeEntry.stopped(stopped) }
     }
 }

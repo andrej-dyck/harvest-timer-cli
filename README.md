@@ -21,11 +21,10 @@ npx zx index.js
 - ✅ start timer (on a _project task_ with _notes_ and _start time_)
   - ✅ exclude irrelevant projects from prompts via config
   - ✅ input relative start time; e.g., `-15m` for _15 minutes ago_
-- ✅ edit entries (_start time_, _end time_, _notes_, and _task_)
-- ✅ restart timer (choose an entry from preceding workdays)
-- ✅ stop running timer
+- ✅ edit an entry (_start time_, _end time_, _notes_, and _task_)
+- ✅ restart timer by choosing an entry from preceding workdays
+- ✅ stop running timer (with _end time_)
 - 💡 _TODO_ start timer with custom rules via config
-- 💡 _TODO_ stop timer with edit (end-time)
 - 💡 _TODO_ fix overlaps
 - 💡 _TODO_ fix gaps (unwanted breaks)
 - 💡 _TODO_ delete entries
