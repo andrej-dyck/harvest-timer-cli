@@ -50,11 +50,15 @@ const formatStopped = ({ notes, started_time, ended_time, hours }) =>
         ` ⌚ ${formatTime({ started_time, ended_time })} (${hours}h)`
         : chalk.red('🛑 failed to stop timer')
 
+const formatDeleted = ({ notes, started_time, ended_time }) =>
+    `${chalk.bold('deleted')} ${formatTime({ started_time, ended_time })} ${formatNotes(notes)}`
+
 export default {
     timeEntry: {
         oneLiner: (entry) => formatAs1Line(entry),
         started: (entry) => formatStarted(entry),
         stopped: (entry) => formatStopped(entry),
+        deleted: (entry) => formatDeleted(entry),
     },
     duration: ({ hours }) => formatDuration({ hours })
 }

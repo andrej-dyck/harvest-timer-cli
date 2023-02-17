@@ -16,18 +16,25 @@ npx zx index.js
 
 ## 🎨 Features
 
+### Days
 - ✅ shows today's entries (with _breaks_, _conflicts_, and _missing notes_)
 - ✅ show entries of preceding workdays (max. five workdays)
+
+### Timer
 - ✅ start timer (on a _project task_ with _notes_ and _start time_)
   - ✅ exclude irrelevant projects from prompts via config
   - ✅ input relative start time; e.g., `-15m` for _15 minutes ago_
-- ✅ edit an entry (_start time_, _end time_, _notes_, and _task_)
-- ✅ restart timer by choosing an entry from preceding workdays
 - ✅ stop running timer (with _end time_)
+- ✅ restart timer by choosing an entry from preceding workdays
+
+### Entries
+- ✅ edit an entry (_start time_, _end time_, _notes_, and _task_)
+- ✅ delete an entry
+
+### WIP
 - 💡 _TODO_ start timer with custom rules via config
 - 💡 _TODO_ fix overlaps
 - 💡 _TODO_ fix gaps (unwanted breaks)
-- 💡 _TODO_ delete entries
 - 💡 _TODO_ create new entry with endet time
 - 💡 _TODO_ configure workdays
 - 💡 _TODO_ bundle to binary (e.g., with [pgk](https://github.com/vercel/pkg)?)

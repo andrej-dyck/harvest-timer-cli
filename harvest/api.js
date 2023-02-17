@@ -29,6 +29,10 @@ const harvest = {
     post: async (resource, json) =>
         got(resource, { method: 'post', json }, await apiOptions.value()).json()
             .catch((err) => console.log(err, err.response.body)),
+
+    delete: async (resource) =>
+        got(resource, { method: 'delete' }, await apiOptions.value())
+            .catch((err) => console.log(err, err.response.body)),
 }
 
 const projects = {
@@ -51,7 +55,10 @@ const time = {
     },
 
     editEntry: ({ id }, { task_id, started_time, ended_time, notes }) =>
-        harvest.patch(`v2/time_entries/${id}`, { task_id, started_time, ended_time, notes })
+        harvest.patch(`v2/time_entries/${id}`, { task_id, started_time, ended_time, notes }),
+
+    deleteEntry: ({ id }) =>
+        harvest.delete(`v2/time_entries/${id}`)
 }
 
 const users = {

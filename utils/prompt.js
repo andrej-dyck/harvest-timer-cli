@@ -26,11 +26,13 @@ export default {
         promptInput({ message, default: defaultInput, validate }).then((a) => typeof a === 'string' ? a : `${a}`),
     selection: ({ message, choices }) =>
         prompt({ type: 'autocomplete', message, source: fuzzySearch(choices), pageSize: 10, loop: false }),
+    confirmation: ({ message, defaultAnswer = true }) =>
+        prompt({ type: 'confirm', message, default: defaultAnswer }),
     continue: ({ message = 'press Enter to continue...' } = {}) =>
         question(message),
     choices: {
         named: namedChoices,
-        cancel: { name: '❌ cancel', value: 'cancel' },
+        cancel: { name: '⛔ cancel', value: 'cancel' },
         takeIfNotCanceled: (value) => value === 'cancel' ? undefined : value
     },
 }

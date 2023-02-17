@@ -15,10 +15,20 @@ const editEntry = async ({ user_id, day }) => {
     if (!entry) return
 
     const edits = await promptForEdits(entry)
-    if (object.isEmpty(edits)) return
+    if (!edits) return
 
+    if (edits === 'delete') return { output: await deletedEntry(entry) }
+    else return { output: await editedEntry(entry, edits) }
+}
+
+const deletedEntry = async (entry) => {
+    await api.time.deleteEntry(entry)
+    return formatting.timeEntry.deleted(entry)
+}
+
+const editedEntry = async (entry, edits) => {
     const updated = await api.time.editEntry(entry, edits)
-    return { output: formatting.timeEntry.oneLiner(updated) }
+    return formatting.timeEntry.oneLiner(updated)
 }
 
 const promptForEdits = async (entry) => {
@@ -29,11 +39,12 @@ const promptForEdits = async (entry) => {
         { name: 'start time', value: 'started_time' },
         { name: 'end time', value: 'ended_time' },
         { name: 'task', value: 'task_id' },
+        { name: '❌ delete', value: 'delete' },
         prompt.choices.cancel
     ]
 
     let value = undefined
-    const nonValues = new Set(['confirm', prompt.choices.cancel.value])
+    const nonValues = new Set(['confirm', 'delete', prompt.choices.cancel.value])
     while (!nonValues.has(value)) {
         value = await prompt.selection({
             message: `Edit:`,
@@ -50,9 +61,13 @@ const promptForEdits = async (entry) => {
             edits.started_time = await inputTime.started({ defaultTime: entry.started_time })
         if (value === 'ended_time')
             edits.ended_time = await inputTime.ended({ defaultTime: entry.ended_time })
+        if (value === 'delete')
+            value = await prompt.confirmation({ message: '❌ confirm delete?' }).then((y) => y ? value : undefined)
     }
 
-    return value === 'confirm' ? edits : {}
+    if (value === 'delete') return value
+    if (value === 'confirm') return edits
+    else return undefined
 }
 
 export default {

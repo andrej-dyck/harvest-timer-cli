@@ -29,9 +29,11 @@ const inputTime = ({ message, defaultTime, now }) =>
                 ? true
                 : invalidTimeInputMessage
     }).then(
-        (time) => time === 'now' ? now()
-            : /^[+\-]/.test(time) ? convertToTime(dayjs(), time)
-                : ensureColon(time).padStart(5, '0')
+        (time) => {
+            if (time === 'now') return now()
+            if (/^[+\-]/.test(time)) return convertToTime(dayjs(), time)
+            else return ensureColon(time).padStart(5, '0')
+        }
     ).then(
         (time) => dayjs.isDayjs(time) ? time.format('HH:mm') : time
     )
