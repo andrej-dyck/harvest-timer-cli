@@ -21,7 +21,7 @@ const currentProjects = lazy(async () =>
 )
 
 const filterCurrent = (projectsConfig) => (projects) => {
-    const ignored = new Set(projectsConfig?.ignored?.names ?? [])
+    const ignored = new Set(projectsConfig.ignored?.names ?? [])
     return projects.filter(({ name }) => !ignored.has(name))
 }
 

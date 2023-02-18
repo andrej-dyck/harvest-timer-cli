@@ -5,6 +5,13 @@ import inputNotes from './input-notes.js'
 import inputTime from './input-time.js'
 
 const startTimer = async () => {
+    const args = await promptForNewTimer()
+    if (!args) return
+
+    return { output: await startedTimer(args) }
+}
+
+const promptForNewTimer = async () => {
     const project = await chooseProject.current()
     if (!project) return
 
@@ -15,8 +22,12 @@ const startTimer = async () => {
 
     const started_time = await inputTime.started({ now: () => undefined })
 
-    const started = await api.time.startToday({ project_id: project.id, task_id: task.id, notes, started_time })
-    return { output: formatting.timeEntry.started(started) }
+    return { project, task, notes, started_time }
+}
+
+const startedTimer = async ({ project: { id: project_id }, task: { id: task_id }, notes, started_time }) => {
+    const started = await api.time.startToday({ project_id, task_id, notes, started_time })
+    return formatting.timeEntry.started(started)
 }
 
 export default {
