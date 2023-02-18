@@ -25,7 +25,7 @@ export default {
     input: ({ message, defaultInput = undefined, validate = undefined }) =>
         promptInput({ message, default: defaultInput, validate }).then((a) => typeof a === 'string' ? a : `${a}`),
     selection: ({ message, choices }) =>
-        prompt({ type: 'autocomplete', message, source: fuzzySearch(choices), pageSize: 10, loop: false }),
+        prompt({ type: 'autocomplete', message, source: fuzzySearch(choices), pageSize: 20, loop: false }),
     confirmation: ({ message, defaultAnswer = true }) =>
         prompt({ type: 'confirm', message, default: defaultAnswer }),
     continue: ({ message = 'press Enter to continue...' } = {}) =>
