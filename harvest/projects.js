@@ -27,5 +27,16 @@ const filterCurrent = (projectsConfig) => (projects) => {
 
 export default {
     current: () => currentProjects.value(),
-    byId: async ({ id }) => (await projects.value()).find((p) => p.id === id)
+
+    byId: async ({ id }) =>
+        (await projects.value()).find((p) => p.id === id),
+    byName: async ({ name, exact = true }) =>
+        (await projects.value()).find((p) => exact ? p.name === name : p.name.includes(name)),
+
+    tasksOf: ({ tasks }) => ({
+        byId: ({ id }) =>
+            tasks.find((t) => t.id === id),
+        byName: ({ name, exact = true }) =>
+            tasks.find((t) => exact ? t.name === name : t.name.includes(name))
+    })
 }
