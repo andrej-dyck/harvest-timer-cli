@@ -6,7 +6,7 @@ import timeEntries from './time-entries.js'
 
 const chooseEntry = async ({ user_id, day, filterRunning = true }) => {
     const entries = (await timeEntries.ofDay({ user_id, day }))
-        .filter(({ is_running }) => !filterRunning || is_running === true)
+        .filter(({ is_running }) => !filterRunning || is_running !== true)
 
     const entry = await prompt.selection({
         message: `Which entry of ${day.format('ddd, DD.MM.YYYY')}?`,
